@@ -50,6 +50,7 @@ public class LoginActivity extends AppCompatActivity {
                     Toast.makeText(LoginActivity.this, "登录成功", Toast.LENGTH_SHORT).show();
                     Intent intent =new Intent(LoginActivity.this,MainActivity.class);
                     startActivity(intent);
+                    finish();
                 }
             }
         });
