@@ -50,8 +50,7 @@ public class RecordActivity extends AppCompatActivity {
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.record_back:
-                Intent jmp=new Intent(RecordActivity.this, MainActivity.class);
-                startActivity(jmp);
+                finish();
                 break;
         }
     }
