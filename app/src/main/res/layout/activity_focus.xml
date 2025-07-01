@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".FocusActivity">
+
+    <!-- 背景图片 -->
+    <ImageView
+        android:id="@+id/backgroundImage"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/focus_background"
+        android:alpha="0.7"/>
+
+    <!-- 内容区域 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:padding="24dp">
+
+        <!-- 诗句展示 -->
+        <TextView
+            android:id="@+id/poetryTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:textStyle="italic"
+            android:maxWidth="300dp"
+            android:textAlignment="center"
+            android:lineSpacingExtra="6dp"
+            android:padding="16dp"
+            android:background="@drawable/poetry_background"/>
+
+        <!-- 倒计时显示器 -->
+        <TextView
+            android:id="@+id/timerTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="60sp"
+            android:textColor="@color/pink"
+            android:textStyle="bold"
+            android:layout_marginTop="24dp"
+            android:fontFamily="monospace"/>
+
+        <!-- 控制按钮 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginTop="48dp">
+
+            <!-- 屏幕常亮开关 -->
+            <Button
+                android:id="@+id/screenOnButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="常亮：开"
+                android:textSize="16sp"
+                android:minWidth="96dp"
+                android:backgroundTint="@color/blue"
+                android:layout_marginEnd="8dp"/>
+
+            <!-- 暂停/继续 -->
+            <Button
+                android:id="@+id/pauseButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="暂停"
+                android:textSize="16sp"
+                android:minWidth="96dp"
+                android:backgroundTint="@color/green"
+                android:layout_marginEnd="8dp"/>
+
+            <!-- 结束 -->
+            <Button
+                android:id="@+id/exitButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="结束"
+                android:textSize="16sp"
+                android:minWidth="96dp"
+                android:backgroundTint="@color/white"/>
+        </LinearLayout>
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

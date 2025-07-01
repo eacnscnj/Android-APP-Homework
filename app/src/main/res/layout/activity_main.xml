@@ -44,6 +44,7 @@
         android:padding="8dp"
         android:scrollbars="none" />
 
+
     <ImageButton
         android:id="@+id/main_btn_more"
         android:layout_width="50dp"
@@ -68,4 +69,17 @@
         android:textStyle="bold"
         android:gravity="center"
         />
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/main_btn_focus"
+        android:onClick="onClick"
+        android:layout_width="128dp"
+        android:layout_height="50dp"
+        android:layout_alignBottom="@id/main_btn_focus"
+        android:background="@drawable/main_recordbtn_bg"
+        android:layout_toStartOf="@id/main_btn_focus"
+        android:text="@string/start_focus"
+        android:textStyle="bold"
+        android:gravity="center"
+        />
+
 </RelativeLayout>

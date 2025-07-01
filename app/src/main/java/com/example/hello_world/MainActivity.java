@@ -72,6 +72,12 @@ public class MainActivity extends AppCompatActivity {
             case R.id.main_btn_more:
 
                 break;
+            case R.id.main_btn_focus:  // 专注功能按钮
+                Intent focusIntent = new Intent(this, FocusActivity.class);
+                startActivity(focusIntent);
+                // 添加过渡动画（可选）
+                // overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                break;
         }
     }
 }
