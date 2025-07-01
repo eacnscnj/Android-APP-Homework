@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".RecordActivity"
+    android:orientation="vertical"
+    android:background="@color/grey">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
+        <ImageView
+            android:id="@+id/record_back"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:src="@mipmap/h_error"
+            android:layout_marginLeft="8dp"
+            android:onClick="onClick"
+            />
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/record_tabs"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerHorizontal="true"
+            app:tabGravity="center"
+            app:tabMode="auto"
+            app:tabTextColor="@color/more_grey"
+            app:tabSelectedTextColor="@color/black"
+            app:tabIndicatorColor="@color/black"/>
+    </RelativeLayout>
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/record_viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+</LinearLayout>

@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/grey"
+    android:padding="8dp"
+    android:layout_margin="8dp"
+    android:orientation="vertical">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:padding="20dp"
+        tools:ignore="MissingConstraints">
+        <TextView
+            android:id="@+id/item_top_tv1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/mouth_study"
+            android:textStyle="bold"/>
+        <TextView
+            android:id="@+id/item_top_out"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0h"
+            android:layout_below="@id/item_top_tv1"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:textColor="@color/black" />
+
+        <ImageView
+            android:id="@+id/item_top_visible"
+            android:layout_width="56dp"
+            android:layout_height="32dp"
+            android:layout_alignTop="@id/item_top_out"
+            android:layout_alignParentRight="true"
+            android:src="@mipmap/display" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/item_top_tv2"
+            android:text="@string/mouth_plan"
+            android:layout_below="@id/item_top_out" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/item_top_tv3"
+            android:text="0h"
+            android:layout_below="@id/item_top_out"
+            android:layout_toRightOf="@id/item_top_tv2" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/item_top_out_buget"
+            android:text="0h"
+            android:layout_alignParentRight="true"
+            android:layout_alignBaseline="@id/item_top_tv2" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/item_top_out_buget2"
+            android:text="@string/mouth_balance"
+            android:layout_alignBaseline="@id/item_top_tv2"
+            android:layout_toLeftOf="@id/item_top_out_buget"/>
+
+        <TextView
+            android:id="@+id/item_top_tv4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/item_top_tv2"
+            android:layout_alignBaseline="@id/item_top_tv2"
+            android:drawableTop="@mipmap/line_chart"
+            android:layout_centerHorizontal="true"
+            android:textColor="@color/blue"
+            android:textStyle="bold"
+            android:text="查看图表分析"/>
+    </RelativeLayout>
+<TextView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/item_top_daily"
+    android:text="今日学习:0h"
+    android:textStyle="italic"
+    android:layout_marginTop="16dp"
+    android:layout_marginBottom="8dp"/>
+</LinearLayout>

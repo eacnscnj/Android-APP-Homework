@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="8dp"
+    android:background="@color/white">
+    <TextView
+        android:id="@+id/dialog_note_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="添加备注哦"
+        android:textSize="16sp"
+        android:textColor="@color/black"/>
+    <EditText
+        android:id="@+id/dialog_note_editText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/dialog_note_text"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="8dp"
+        android:textSize="12sp"
+        android:hint="备注"
+        android:background="@color/white">
+        <requestFocus/>
+    </EditText>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_below="@id/dialog_note_editText"
+        android:padding="8dp">
+        <Button
+            android:id="@+id/dialog_button_cancel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="取消"
+            android:background="@drawable/dialog_btn_bg"
+            android:textStyle="bold"
+            android:layout_marginBottom="4dp">
+        </Button>
+        <Button
+            android:id="@+id/dialog_button_ensure"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="确定"
+            android:background="@drawable/dialog_btn_bg"
+            android:textStyle="bold"
+            android:layout_marginBottom="4dp">
+        </Button>
+
+
+    </LinearLayout>
+
+</RelativeLayout>
