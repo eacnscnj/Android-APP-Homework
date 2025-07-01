@@ -3,6 +3,7 @@ package com.example.hello_world.Database;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import androidx.annotation.Nullable;
 
@@ -26,6 +27,7 @@ public class DBOpenHelper extends SQLiteOpenHelper {
     int kind;*/
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
+        Log.i("tag","manbabbbbbbbbbbbbbbbbbbbbbbbbbbbb");
 
         String sqlCreat="create table typetb(" +
                 "id integer primary key autoincrement," +
@@ -35,6 +37,19 @@ public class DBOpenHelper extends SQLiteOpenHelper {
                 "kind integer)";
         sqLiteDatabase.execSQL(sqlCreat);
         insertType(sqLiteDatabase);
+
+
+        /*
+        id integer primary key autoincrement
+        username
+        password
+        register_type integer
+         */
+        //创建login_table表
+        String sql_Create_user_table="create table user_table(id integer primary key autoincrement,username varchar(12),password varchar(20),register_type integer)";
+        sqLiteDatabase.execSQL(sql_Create_user_table);
+
+        Log.i("tag","111");
 
         //记录表
         String sql = "create table studyTimeTable(id integer primary key autoincrement,typename varchar(12),focuseImageID integer,note varchar(128),studyTime float,time varchar(64)," +

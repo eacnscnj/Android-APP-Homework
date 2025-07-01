@@ -31,7 +31,6 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 //跳转到注册页面
-
                 Intent intent  =new Intent(LoginActivity.this,RegisterActivity.class);
                 startActivity(intent);
             }
@@ -46,7 +45,9 @@ public class LoginActivity extends AppCompatActivity {
                 if(TextUtils.isEmpty(username)||TextUtils.isEmpty(password)){
                     Toast.makeText(LoginActivity.this, "请输入用户名或密码", Toast.LENGTH_SHORT).show();
                 }else{
-                    //需要插入
+                    /*
+                    判断用户是否合法的逻辑
+                     */
                     Toast.makeText(LoginActivity.this, "登录成功", Toast.LENGTH_SHORT).show();
                     Intent intent =new Intent(LoginActivity.this,MainActivity.class);
                     startActivity(intent);

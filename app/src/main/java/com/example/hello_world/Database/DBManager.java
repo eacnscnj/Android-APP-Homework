@@ -49,7 +49,7 @@ public class DBManager {
     public static void insertItemToTable(AccountIn accountIn){
         ContentValues values = new ContentValues();
         values.put("typename",accountIn.getTypename());
-        values.put("focusImageID",accountIn.getFocusImageID());
+        values.put("focuseImageID",accountIn.getFocusImageID());
         values.put("note",accountIn.getNote());
         values.put("studyTime",accountIn.getStudyTime());
         values.put("time",accountIn.getTime());
@@ -78,5 +78,22 @@ public class DBManager {
             list.add(accountIn);
         }
         return list;
+    }
+
+
+    /*
+    user_table 增删改查
+     */
+
+    public static int Insert_to_User_table(String username, String password, int register_type) {
+        ContentValues values = new ContentValues();
+        //填充占位符
+        values.put("username", username);
+        values.put("password", password);
+        values.put("register_type", register_type);
+        String nullColumnHack = "values(null,?,?,?)";
+        //执行
+        int insert = (int) db.insert("user_table", nullColumnHack, values);
+        return insert;
     }
 }
