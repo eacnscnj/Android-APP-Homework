@@ -29,6 +29,12 @@ android {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
+    // 加上这段配置自动使用 JDK 11 或 JDK 8 编译
+    java {
+        toolchain {
+            languageVersion = JavaLanguageVersion.of(8) // 或 8，推荐用 11
+        }
+    }
 }
 
 dependencies {

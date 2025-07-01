@@ -49,12 +49,11 @@ public class DBManager {
     public static void insertItemToTable(AccountIn accountIn){
         ContentValues values = new ContentValues();
         values.put("typename",accountIn.getTypename());
-        values.put("focuseImageID",accountIn.getFocusImageID());
+        values.put("focusImageID",accountIn.getFocusImageID());
         values.put("note",accountIn.getNote());
         values.put("studyTime",accountIn.getStudyTime());
         values.put("time",accountIn.getTime());
         values.put("year",accountIn.getYear());
-        //values.put("mounth",accountIn.getMounth());
         values.put("mounth",accountIn.getMounth());
         values.put("day",accountIn.getDay());
         values.put("kind",accountIn.getKind());
