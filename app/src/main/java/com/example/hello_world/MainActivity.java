@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
             case R.id.main_btn_edit:
                 Intent jmp=new Intent(this,RecordActivity.class);
                 startActivity(jmp);
-                finish();
+                //finish();
                 break;
             case R.id.main_btn_more:
 
