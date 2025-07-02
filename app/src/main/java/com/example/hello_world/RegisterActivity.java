@@ -58,7 +58,6 @@ public class RegisterActivity extends AppCompatActivity {
                      */
                     int getSuccess= DBManager.Insert_to_User_table(username,password,0);
                     if(getSuccess>0){
-                        Log.i("Tag","向数据库掺入数据成功");
                         Toast.makeText(RegisterActivity.this, "注册成功，请登录", Toast.LENGTH_SHORT).show();
                         finish();
                     }

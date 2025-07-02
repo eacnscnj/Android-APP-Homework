@@ -49,9 +49,7 @@ public class LoginActivity extends AppCompatActivity {
                 if(TextUtils.isEmpty(username)||TextUtils.isEmpty(password)){
                     Toast.makeText(LoginActivity.this, "请输入用户名或密码", Toast.LENGTH_SHORT).show();
                 }else{
-                    /*
-                    判断用户是否合法的逻辑
-                     */
+                    //判断用户是否合法
                     UserInfo userInfo= DBManager.query_User_From_usertable(username,password);
                     if(userInfo!=null){
                         /*
@@ -62,12 +60,9 @@ public class LoginActivity extends AppCompatActivity {
                         startActivity(intent);
                         finish();
                     }else{
-                        /*
-                        待修改，提示 用户名无效或密码错误
-                         */
-                        Log.i("tag","登录失败失败失败失败失败失败失败失败失败失败");
+                        Toast.makeText(LoginActivity.this, "用户名无效或密码错误", Toast.LENGTH_SHORT).show();
+                        //Log.i("tag","登录失败失败失败失败失败失败失败失败失败失败");
                     }
-
                 }
             }
         });
