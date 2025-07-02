@@ -110,17 +110,21 @@ public class MainActivity extends AppCompatActivity implements AccountAdapter.On
                 toggleRadialMenu(); // 点击子菜单后，自动收起菜单
                 Intent jmp=new Intent(this,RecordActivity.class);
                 startActivity(jmp);
+//<<<<<<< main
                 break;
             case R.id.main_btn_statistics: // 新增 case
                 Log.d(TAG, "Statistics button clicked. Navigating to StatisticsActivity.");
                 toggleRadialMenu(); // 点击子菜单后，自动收起菜单
                 Intent statsJmp = new Intent(this, StatisticsActivity.class);
                 startActivity(statsJmp);
-                break;
-            case R.id.main_btn_more:
-                Log.d(TAG, "More button clicked. Toggling radial menu.");
-                toggleRadialMenu();
-                break;
+//=======
+                //finish();
+//>>>>>>> main
+//                break;
+//            case R.id.main_btn_more:
+//              Log.d(TAG, "More button clicked. Toggling radial menu.");
+//              toggleRadialMenu();
+//              break;
         }
     }
 
