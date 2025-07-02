@@ -1,8 +1,10 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/grey"
+    android:orientation="vertical"
     tools:context=".fragment_record.BaseFragment">
 
     <RelativeLayout
@@ -23,10 +25,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/fragment_container_view_text"
-            android:text="其他"
-            android:layout_toRightOf="@id/fragment_record_top_image"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="8dp"/>
+        android:text="其他"
+        android:layout_toRightOf="@id/fragment_record_top_image"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="8dp"/>
         <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -44,34 +46,19 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:id="@+id/fragment_record_line"
-        android:layout_below="@id/fragment_record_top"
         android:background="@color/black"/>
     <GridView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/fragment_record_gridView"
-        android:layout_below="@id/fragment_record_line"
+        android:layout_height="0dp" android:layout_weight="1" android:id="@+id/fragment_record_gridView"
         android:background="@color/white"
         android:numColumns="4"
         android:paddingTop="4dp"
         android:paddingBottom="4dp"/>
-    <android.inputmethodservice.KeyboardView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/fragment_record_keyboard"
-        android:keyBackground="@color/grey"
-        android:keyTextColor="@color/black"
-        android:focusable="true"
-        android:focusableInTouchMode="true"
-        android:paddingTop="2dp"
-        android:layout_alignParentBottom="true"
-        android:shadowColor="@color/white"
-        android:shadowRadius="0.0"/>
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:layout_above="@id/fragment_record_keyboard">
+        android:background="@color/white">
         <TextView
             android:id="@+id/fragment_record_time"
             android:layout_width="wrap_content"
@@ -87,4 +74,16 @@
             android:layout_toLeftOf="@id/fragment_record_time"
             android:padding="8dp" />
     </RelativeLayout>
-</RelativeLayout>
+
+    <android.inputmethodservice.KeyboardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/fragment_record_keyboard"
+        android:keyBackground="@color/grey"
+        android:keyTextColor="@color/black"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:paddingTop="2dp"
+        android:shadowColor="@color/white"
+        android:shadowRadius="0.0"/>
+</LinearLayout>
