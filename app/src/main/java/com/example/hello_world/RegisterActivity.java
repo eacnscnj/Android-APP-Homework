@@ -14,7 +14,6 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.hello_world.Database.DBManager;
-import com.example.hello_world.Database.LoginDBManage;
 import com.example.hello_world.Database.UserInfo;
 
 public class RegisterActivity extends AppCompatActivity {
