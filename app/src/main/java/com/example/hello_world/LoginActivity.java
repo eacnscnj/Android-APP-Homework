@@ -51,7 +51,12 @@ public class LoginActivity extends AppCompatActivity {
                 }else{
                     //判断用户是否合法
                     UserInfo userInfo= DBManager.query_User_From_usertable(username,password);
-                    if(userInfo!=null){
+                    if(userInfo==null){
+                        Toast.makeText(LoginActivity.this, "用户名无效", Toast.LENGTH_SHORT).show();
+                    }else if(userInfo.get_id()==-1){
+                        Toast.makeText(LoginActivity.this, "密码错误", Toast.LENGTH_SHORT).show();
+                        //Log.i("tag","登录失败失败失败失败失败失败失败失败失败失败");
+                    }else{
                         /*
                         待修改 ，没有做出不同用户的区分
                          */
@@ -59,9 +64,6 @@ public class LoginActivity extends AppCompatActivity {
                         Intent intent =new Intent(LoginActivity.this,MainActivity.class);
                         startActivity(intent);
                         finish();
-                    }else{
-                        Toast.makeText(LoginActivity.this, "用户名无效或密码错误", Toast.LENGTH_SHORT).show();
-                        //Log.i("tag","登录失败失败失败失败失败失败失败失败失败失败");
                     }
                 }
             }

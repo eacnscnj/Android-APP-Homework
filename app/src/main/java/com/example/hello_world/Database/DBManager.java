@@ -101,10 +101,35 @@ public class DBManager {
     }
 
     /*
+    查找用户名是否存在，如果存在再去判断密码
+     */
+    private static boolean isUsernameExist(String username) {
+        Cursor cursor = null;
+        try {
+            cursor = db.query(
+                    "user_table",
+                    new String[]{"id"},
+                    "username = ?",
+                    new String[]{username},
+                    null, null, null
+            );
+            return cursor != null && cursor.getCount() > 0;
+        } finally {
+            if (cursor != null) cursor.close();
+        }
+    }
+
+    /*
     查找数据
      */
     public static UserInfo query_User_From_usertable(String username, String password) {
         Cursor cursor = null;
+
+        if (!isUsernameExist(username)) {
+            Log.d("Login", "用户名不存在: " + username);
+            return null;
+        }
+
         try {
             // 查询所有需要的字段
             cursor = db.query(
@@ -120,12 +145,16 @@ public class DBManager {
                 /*
                 待修改 ， 可能需要对用户名和密码作一定的约束
                  */
+                //成功匹配用户命与密码
                 return new UserInfo(
                         cursor.getInt(cursor.getColumnIndexOrThrow("id")),
                         cursor.getString(cursor.getColumnIndexOrThrow("username")),
                         cursor.getString(cursor.getColumnIndexOrThrow("password")),
                         cursor.getInt(cursor.getColumnIndexOrThrow("register_type"))
                 );
+            }else{ //密码错误
+                Log.d("Login", "密码错误，用户名: " + username);
+                return new UserInfo(-1, username,"", -1);
             }
         } catch (Exception e) {
             e.printStackTrace();
