@@ -33,5 +33,17 @@
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/record_viewpager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
-</LinearLayout>
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+
+    <Button
+        android:id="@+id/record_save_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="保存记录"
+        android:textColor="@color/white"
+        android:background="@color/black"
+        android:padding="12dp"
+        android:layout_margin="8dp"
+        android:onClick="onClick"
+        android:clickable="true"   android:focusable="true"    android:foreground="?attr/selectableItemBackground" /> </LinearLayout>
