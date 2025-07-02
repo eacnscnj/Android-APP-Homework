@@ -45,11 +45,13 @@ public class DBOpenHelper extends SQLiteOpenHelper {
         password
         register_type integer
          */
-        //创建login_table表
+        //创建login使用的 user_table表
         String sql_Create_user_table="create table user_table(id integer primary key autoincrement,username varchar(12),password varchar(20),register_type integer)";
         sqLiteDatabase.execSQL(sql_Create_user_table);
+        insertUserTable(sqLiteDatabase);
 
-        Log.i("tag","111");
+
+
 
         //记录表
         String sql = "create table studyTimeTable(id integer primary key autoincrement,typename varchar(12),focuseImageID integer,note varchar(128),studyTime float,time varchar(64)," +
@@ -76,6 +78,23 @@ public class DBOpenHelper extends SQLiteOpenHelper {
         db.execSQL(sqlInsert,new Object[]{"应用开发与Linux", R.mipmap.develop,R.mipmap.develop_fs,1});
         db.execSQL(sqlInsert,new Object[]{"人工智能", R.mipmap.ai,R.mipmap.ai_fs,1});
         db.execSQL(sqlInsert,new Object[]{"计算机图形学", R.mipmap.cp,R.mipmap.cp_fs,1});
+    }
+
+    /*
+    向user_table插入一些基础的数据
+     */
+    private void insertUserTable(SQLiteDatabase db){
+        String sqlInsert = "insert into user_table (username, password, register_type) values(?,?,?)";
+
+        // 插入一些示例用户数据
+        db.execSQL(sqlInsert, new Object[]{"root", "123456", 1});
+        db.execSQL(sqlInsert, new Object[]{"maochangjingyan", "securePass456", 1});
+        db.execSQL(sqlInsert, new Object[]{"alice", "alice2023!", 1});
+        db.execSQL(sqlInsert, new Object[]{"bob_smith", "bobTheBuilder", 0});
+        db.execSQL(sqlInsert, new Object[]{"emma_w", "emmaW@123", 0});
+        db.execSQL(sqlInsert, new Object[]{"admin", "adminPassword", 1});
+        db.execSQL(sqlInsert, new Object[]{"test_user", "123456", 0});
+        db.execSQL(sqlInsert, new Object[]{"developer", "devPass789", 0});
     }
 
     @Override

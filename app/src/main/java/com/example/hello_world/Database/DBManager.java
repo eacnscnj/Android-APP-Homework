@@ -85,6 +85,9 @@ public class DBManager {
     user_table 增删改查
      */
 
+    /*
+    插入数据
+     */
     public static int Insert_to_User_table(String username, String password, int register_type) {
         ContentValues values = new ContentValues();
         //填充占位符
@@ -96,4 +99,41 @@ public class DBManager {
         int insert = (int) db.insert("user_table", nullColumnHack, values);
         return insert;
     }
+
+    /*
+    查找数据
+     */
+    public static UserInfo query_User_From_usertable(String username, String password) {
+        Cursor cursor = null;
+        try {
+            // 查询所有需要的字段
+            cursor = db.query(
+                    "user_table",
+                    new String[]{"id", "username","password", "register_type"}, // 查询的列
+                    "username = ? AND password = ?",                // WHERE条件
+                    new String[]{username, password},               // 条件参数
+                    null, null, null
+            );
+
+            if (cursor != null && cursor.moveToFirst()) {
+                // 从Cursor中提取数据并构建UserInfo对象
+                /*
+                待修改 ， 可能需要对用户名和密码作一定的约束
+                 */
+                return new UserInfo(
+                        cursor.getInt(cursor.getColumnIndexOrThrow("id")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("username")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("password")),
+                        cursor.getInt(cursor.getColumnIndexOrThrow("register_type"))
+                );
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (cursor != null) cursor.close();
+        }
+        return null;
+    }
+
+
 }

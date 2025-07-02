@@ -3,6 +3,7 @@ package com.example.hello_world;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -12,6 +13,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+
+import com.example.hello_world.Database.DBManager;
+import com.example.hello_world.Database.UserInfo;
 
 public class LoginActivity extends AppCompatActivity {
     private EditText et_username;
@@ -48,10 +52,22 @@ public class LoginActivity extends AppCompatActivity {
                     /*
                     判断用户是否合法的逻辑
                      */
-                    Toast.makeText(LoginActivity.this, "登录成功", Toast.LENGTH_SHORT).show();
-                    Intent intent =new Intent(LoginActivity.this,MainActivity.class);
-                    startActivity(intent);
-                    finish();
+                    UserInfo userInfo= DBManager.query_User_From_usertable(username,password);
+                    if(userInfo!=null){
+                        /*
+                        待修改 ，没有做出不同用户的区分
+                         */
+                        Toast.makeText(LoginActivity.this, "登录成功", Toast.LENGTH_SHORT).show();
+                        Intent intent =new Intent(LoginActivity.this,MainActivity.class);
+                        startActivity(intent);
+                        finish();
+                    }else{
+                        /*
+                        待修改，提示 用户名无效或密码错误
+                         */
+                        Log.i("tag","登录失败失败失败失败失败失败失败失败失败失败");
+                    }
+
                 }
             }
         });
