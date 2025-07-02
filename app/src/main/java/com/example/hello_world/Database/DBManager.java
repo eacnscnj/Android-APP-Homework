@@ -66,6 +66,19 @@ public class DBManager {
     // 记录表插入数据
     public static void insertItemToTable(AccountIn accountIn){
         ContentValues values = new ContentValues();
+//<<<<<<< Login_222
+        values.put("typename",accountIn.getTypename());
+        values.put("focuseImageID",accountIn.getFocusImageID());
+        values.put("note",accountIn.getNote());
+        values.put("studyTime",accountIn.getStudyTime());
+        values.put("time",accountIn.getTime());
+        values.put("year",accountIn.getYear());
+        values.put("mounth",accountIn.getMounth());
+        values.put("day",accountIn.getDay());
+        values.put("kind",accountIn.getKind());
+        db.insert("studyTimeTable",null,values);
+        Log.i("animee","insert is ok");
+//=======
         values.put("typename", accountIn.getTypename());
         values.put("focusImageID", accountIn.getFocusImageID());
         values.put("note", accountIn.getNote());
@@ -101,6 +114,7 @@ public class DBManager {
                 if (tableCursor != null) tableCursor.close();
             }
         }
+//>>>>>>> main
     }
 
     @SuppressLint("Range")
@@ -183,6 +197,94 @@ public class DBManager {
         return list;
     }
 
+//<<<<<<< Login_222
+
+    /*
+    user_table 增删改查
+     */
+
+    /*
+    插入数据
+     */
+    public static int Insert_to_User_table(String username, String password, int register_type) {
+        ContentValues values = new ContentValues();
+        //填充占位符
+        values.put("username", username);
+        values.put("password", password);
+        values.put("register_type", register_type);
+        String nullColumnHack = "values(null,?,?,?)";
+        //执行
+        int insert = (int) db.insert("user_table", nullColumnHack, values);
+        return insert;
+    }
+
+    /*
+    查找用户名是否存在，如果存在再去判断密码
+     */
+    private static boolean isUsernameExist(String username) {
+        Cursor cursor = null;
+        try {
+            cursor = db.query(
+                    "user_table",
+                    new String[]{"id"},
+                    "username = ?",
+                    new String[]{username},
+                    null, null, null
+            );
+            return cursor != null && cursor.getCount() > 0;
+        } finally {
+            if (cursor != null) cursor.close();
+        }
+    }
+
+    /*
+    查找数据
+     */
+    public static UserInfo query_User_From_usertable(String username, String password) {
+        Cursor cursor = null;
+
+        if (!isUsernameExist(username)) {
+            Log.d("Login", "用户名不存在: " + username);
+            return null;
+        }
+
+        try {
+            // 查询所有需要的字段
+            cursor = db.query(
+                    "user_table",
+                    new String[]{"id", "username","password", "register_type"}, // 查询的列
+                    "username = ? AND password = ?",                // WHERE条件
+                    new String[]{username, password},               // 条件参数
+                    null, null, null
+            );
+
+            if (cursor != null && cursor.moveToFirst()) {
+                // 从Cursor中提取数据并构建UserInfo对象
+                /*
+                待修改 ， 可能需要对用户名和密码作一定的约束
+                 */
+                //成功匹配用户命与密码
+                return new UserInfo(
+                        cursor.getInt(cursor.getColumnIndexOrThrow("id")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("username")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("password")),
+                        cursor.getInt(cursor.getColumnIndexOrThrow("register_type"))
+                );
+            }else{ //密码错误
+                Log.d("Login", "密码错误，用户名: " + username);
+                return new UserInfo(-1, username,"", -1);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (cursor != null) cursor.close();
+        }
+        return null;
+    }
+
+
+}
+//=======
     /**
      * 根据传入的 id 删除 studyTimeTable 表中的一条记录
      * @param id 要删除记录的 id
@@ -360,3 +462,4 @@ public class DBManager {
         return distribution;
     }
 }
+//>>>>>>> main
