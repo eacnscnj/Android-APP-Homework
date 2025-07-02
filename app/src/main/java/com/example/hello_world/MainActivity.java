@@ -111,14 +111,14 @@ public class MainActivity extends AppCompatActivity implements AccountAdapter.On
                 Intent jmp=new Intent(this,RecordActivity.class);
                 startActivity(jmp);
 //<<<<<<< main
-/*                break;
+                break;
             case R.id.main_btn_statistics: // 新增 case
                 Log.d(TAG, "Statistics button clicked. Navigating to StatisticsActivity.");
                 toggleRadialMenu(); // 点击子菜单后，自动收起菜单
                 Intent statsJmp = new Intent(this, StatisticsActivity.class);
                 startActivity(statsJmp);
 
- */
+
 //=======
                 //finish();
 //>>>>>>> main
