@@ -7,6 +7,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +18,7 @@ import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.hello_world.Database.AccountIn;
 import com.example.hello_world.Database.DBManager;
@@ -67,7 +69,7 @@ public abstract class BaseFragment extends Fragment {
 
     private void setInitTime() {
         Date date = new Date();
-        SimpleDateFormat t = new SimpleDateFormat("yyyy年mm月dd日 HH:mm");
+        SimpleDateFormat t = new SimpleDateFormat("yyyy年MM月dd日 HH:mm");
         String timee = t.format(date);
         timeText.setText(timee);
         accountIn.setTime(timee);
@@ -116,23 +118,39 @@ public abstract class BaseFragment extends Fragment {
         studyEdit.setOnEditorActionListener(new TextView.OnEditorActionListener(){
             @Override
             public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-                if (i == EditorInfo.IME_ACTION_DONE) {
-                    String inputText = textView.getText().toString();
-                    if(TextUtils.isEmpty(inputText)||inputText.equals("0")){
-                        getActivity().finish();
-                        return false;
-                    }
-                    float studyTime = Float.parseFloat(inputText);
-                    accountIn.setStudyTime(studyTime);
-
-                    saveAccountToDB();
-
-                    getActivity().finish();
-                    return true;
-                }
                 return false;
             }
         });
+    }
+
+    public void triggerSaveAccount() {
+        String inputText = studyEdit.getText().toString();
+        if (TextUtils.isEmpty(inputText) || inputText.equals("0") || Float.parseFloat(inputText) <= 0) {
+            // 如果输入无效，给出提示但不保存
+            Toast.makeText(getContext(), "请输入有效的学习时长！", Toast.LENGTH_SHORT).show();
+            return; // 不执行保存操作
+        }
+        float studyTime = Float.parseFloat(inputText);
+        accountIn.setStudyTime(studyTime);
+
+        Log.d("BaseFragmentDebug", "AccountIn data before saving:");
+        Log.d("BaseFragmentDebug", "Type: " + accountIn.getTypename());
+        Log.d("BaseFragmentDebug", "Study Time: " + accountIn.getStudyTime());
+        Log.d("BaseFragmentDebug", "Date: " + accountIn.getYear() + "-" + accountIn.getMounth() + "-" + accountIn.getDay());
+        Log.d("BaseFragmentDebug", "Time String: " + accountIn.getTime());
+        Log.d("BaseFragmentDebug", "Note: " + accountIn.getNote());
+
+        // 添加备注信息
+        String note = noteText.getText().toString().trim();
+        if (!TextUtils.isEmpty(note) && !note.equals("添加备注...")) { // 检查是否是默认提示文字
+            accountIn.setNote(note);
+        } else {
+            accountIn.setNote(""); // 清空备注或设置为null
+        }
+
+
+        saveAccountToDB(); // 调用抽象方法保存到数据库
+        Toast.makeText(getContext(), "记录已保存！", Toast.LENGTH_SHORT).show(); // 保存成功提示
     }
 
     public abstract void saveAccountToDB() ;

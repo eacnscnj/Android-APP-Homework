@@ -49,6 +49,7 @@ public class LoginActivity extends AppCompatActivity {
                 if(TextUtils.isEmpty(username)||TextUtils.isEmpty(password)){
                     Toast.makeText(LoginActivity.this, "请输入用户名或密码", Toast.LENGTH_SHORT).show();
                 }else{
+//<<<<<<< Login_222
                     //判断用户是否合法
                     UserInfo userInfo= DBManager.query_User_From_usertable(username,password);
                     if(userInfo==null){
@@ -65,6 +66,13 @@ public class LoginActivity extends AppCompatActivity {
                         startActivity(intent);
                         finish();
                     }
+//=======
+                    //需要插入
+                    Toast.makeText(LoginActivity.this, "登录成功", Toast.LENGTH_SHORT).show();
+                    Intent intent =new Intent(LoginActivity.this,MainActivity.class);
+                    startActivity(intent);
+                    finish();
+//>>>>>>> main
                 }
             }
         });

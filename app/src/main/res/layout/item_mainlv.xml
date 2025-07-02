@@ -1,15 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="8dp">
+    android:layout_height="wrap_content"
+    android:padding="8dp"
+    android:background="@drawable/item_background_shape">
+
     <ImageView
         android:id="@+id/item_mainlv_iv"
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:src="@mipmap/math_fs"/>
+
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:id="@+id/text_container" android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/item_mainlv_iv"
         android:layout_marginLeft="8dp"
@@ -33,11 +36,13 @@
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:id="@+id/time_money_container" android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_marginLeft="8dp"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:gravity="right">
+
         <TextView
             android:id="@+id/item_mainlv_tv_money"
             android:layout_width="wrap_content"
@@ -47,12 +52,34 @@
             android:textSize="16sp"
             />
         <TextView
+            android:id="@+id/item_mainlv_tv_startTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:textSize="12sp"
+            android:text="12:30" />
+
+        <TextView
             android:id="@+id/item_mainlv_tv_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:textSize="12sp"
-            />
-
+            android:text="2025年07月01日 12:30" />
     </LinearLayout>
+
+    <ImageView
+        android:id="@+id/item_mainlv_btn_delete"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_alignBottom="@id/time_money_container"
+        android:layout_alignRight="@id/time_money_container"
+        android:layout_marginRight="4dp"
+        android:layout_marginBottom="4dp"
+        android:src="@android:drawable/ic_menu_delete"
+        android:contentDescription="删除"
+        android:clickable="true"
+        android:focusable="true"
+        android:background="?attr/selectableItemBackgroundBorderless" />
+
 </RelativeLayout>

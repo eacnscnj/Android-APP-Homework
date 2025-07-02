@@ -54,7 +54,7 @@ public class DBOpenHelper extends SQLiteOpenHelper {
 
 
         //记录表
-        String sql = "create table studyTimeTable(id integer primary key autoincrement,typename varchar(12),focuseImageID integer,note varchar(128),studyTime float,time varchar(64)," +
+        String sql = "create table studyTimeTable(id integer primary key autoincrement,typename varchar(12),focusImageID integer,note varchar(128),studyTime float,time varchar(64)," +
                 "year integer,mounth integer,day integer, kind integer)";
         sqLiteDatabase.execSQL(sql);
     }
