@@ -52,13 +52,13 @@ public class RecordActivity extends AppCompatActivity {
 
     @SuppressLint("NonConstantResourceId")
     public void onClick(View view) {
-        Log.d(TAG, "onClick method triggered for view ID: " + view.getId()); // <-- 添加日志
+        Log.d(TAG, "onClick method triggered for view ID: " + view.getId());
         switch (view.getId()) {
             case R.id.record_back:
                 Log.d(TAG, "Navigating back to MainActivity.");
                 Intent jmp = new Intent(RecordActivity.this, MainActivity.class);
                 startActivity(jmp);
-                finish(); // 添加 finish() 确保 RecordActivity 被关闭
+                finish();
                 break;
             case R.id.record_save_button: // 处理新增的保存按钮点击事件
                 Log.d(TAG, "Save button clicked. Attempting to trigger save in fragment."); // <-- 添加日志
@@ -70,11 +70,6 @@ public class RecordActivity extends AppCompatActivity {
                         Log.d(TAG, "Calling triggerSaveAccount() on BaseFragment."); // <-- 添加日志
                         // 调用 BaseFragment 中的保存方法
                         ((BaseFragment) currentFragment).triggerSaveAccount(); // 调用新的保存触发方法
-                        // 保存后可以根据需要决定是否关闭当前Activity
-                        // 这里我们选择关闭，回到MainActivity
-//                        Intent jmpToMain = new Intent(RecordActivity.this, MainActivity.class);
-//                        startActivity(jmpToMain);
-//                        finish();
                     } else {
                         Log.e(TAG, "Current fragment is not an instance of BaseFragment: " + currentFragment.getClass().getName());
                     }

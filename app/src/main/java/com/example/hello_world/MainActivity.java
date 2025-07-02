@@ -32,6 +32,7 @@ public class MainActivity extends AppCompatActivity implements AccountAdapter.On
 
     private AppCompatButton editButton; // “记一下”按钮
     private ImageButton moreButton; // “更多”按钮
+    private AppCompatButton statisticsButton;
     private boolean isMenuOpen = false; // 标志菜单是否打开
 
     private int radius = 400; // 展开圆的半径 (单位: 像素)。根据UI效果调整
@@ -67,10 +68,11 @@ public class MainActivity extends AppCompatActivity implements AccountAdapter.On
 
         // 获取按钮引用
         editButton = findViewById(R.id.main_btn_edit);
-        if (editButton == null) {
-            Log.e(TAG, "Error: editButton is null! Check R.id.main_btn_edit in XML.");
+        statisticsButton = findViewById(R.id.main_btn_statistics);
+        if (statisticsButton == null) {
+            Log.e(TAG, "Error: statisticsButton is null! Check R.id.main_btn_edit in XML.");
         } else {
-            Log.d(TAG, "editButton initialized successfully.");
+            Log.d(TAG, "statisticsButton initialized successfully.");
         }
         moreButton = findViewById(R.id.main_btn_more);
 
@@ -99,19 +101,21 @@ public class MainActivity extends AppCompatActivity implements AccountAdapter.On
     }
 
     public void onClick(View view) {
-        switch (view.getId()) {
+        switch (view.getId()){
             case R.id.main_iv_search:
                 Log.d(TAG, "Search button clicked.");
                 break;
             case R.id.main_btn_edit:
                 Log.d(TAG, "Edit (Record) button clicked. Navigating to RecordActivity.");
-                // 点击子菜单后，可以自动收起菜单
-                toggleRadialMenu();
-                Intent jmp = new Intent(this, RecordActivity.class);
+                toggleRadialMenu(); // 点击子菜单后，自动收起菜单
+                Intent jmp=new Intent(this,RecordActivity.class);
                 startActivity(jmp);
-                // 不建议在这里 finish()，因为这会关闭 MainActivity，返回时无法看到。
-                // 如果需要，可以在 RecordActivity 返回时刷新 MainActivity。
-                // finish();
+                break;
+            case R.id.main_btn_statistics: // 新增 case
+                Log.d(TAG, "Statistics button clicked. Navigating to StatisticsActivity.");
+                toggleRadialMenu(); // 点击子菜单后，自动收起菜单
+                Intent statsJmp = new Intent(this, StatisticsActivity.class);
+                startActivity(statsJmp);
                 break;
             case R.id.main_btn_more:
                 Log.d(TAG, "More button clicked. Toggling radial menu.");
@@ -122,33 +126,31 @@ public class MainActivity extends AppCompatActivity implements AccountAdapter.On
 
     /**
      * 切换径向菜单的展开/收起状态
+     * 子菜单在这里加入到收起和展开列表中
      */
     private void toggleRadialMenu() {
         if (isMenuOpen) {
             // 收起菜单
-            animateMenuClose(editButton, 0); // 假设只有一个子菜单“记一下”
-            // animateMenuClose(anotherButton, 1); // 如果有更多按钮，按顺序传入
+            animateMenuClose(editButton, 0);
+            animateMenuClose(statisticsButton, 1);
+            moreButton.animate().rotation(0f).setDuration(300).start();
             isMenuOpen = false;
         } else {
             // 展开菜单
-            editButton.setVisibility(View.VISIBLE); // 确保子菜单可见
-            animateMenuOpen(editButton, 0); // 假设只有一个子菜单“记一下”
-            // animateMenuOpen(anotherButton, 1); // 如果有更多按钮，按顺序传入
+            editButton.setVisibility(View.VISIBLE);
+            statisticsButton.setVisibility(View.VISIBLE);
+            animateMenuOpen(editButton, 0);
+            animateMenuOpen(statisticsButton, 1);
+            moreButton.animate().rotation(45f).setDuration(300).start();
             isMenuOpen = true;
         }
     }
 
-    /**
-     * 展开子菜单动画
-     * @param view 要展开的子菜单视图
-     * @param index 子菜单在所有子菜单中的索引 (用于计算角度)
-     */
     private void animateMenuOpen(View view, int index) {
-        // 计算角度 (以弧度表示)
-        // 这里只是一个简单的示例，假设只有1个子菜单，或者你需要均匀分布多个子菜单。
-        // 如果有多个子菜单，你需要根据子菜单的数量来计算每个子菜单的角度。
-        // 例如，如果有3个子菜单，角度可以是 -30度, 0度, 30度 (相对于垂直方向)
-        double currentAngleDegrees = -135; // 示例：从左上角开始展开，每个间隔45度
+        double startAngleDegrees = -160; // 调整起始角度，例如从左下方开始
+        double angleIncrement = 40; // 调整每个按钮之间的角度间隔
+
+        double currentAngleDegrees = startAngleDegrees + (index * angleIncrement);
         double angleRad = Math.toRadians(currentAngleDegrees);
 
         float targetX = (float) (Math.cos(angleRad) * radius);
@@ -160,21 +162,20 @@ public class MainActivity extends AppCompatActivity implements AccountAdapter.On
         animatorSet.playTogether(
                 ObjectAnimator.ofFloat(view, "translationX", 0, targetX),
                 ObjectAnimator.ofFloat(view, "translationY", 0, targetY),
-                ObjectAnimator.ofFloat(view, "alpha", 0f, 1f), // 淡入动画
-                ObjectAnimator.ofFloat(view, "scaleX", 0.5f, 1f), // 缩放动画
+                ObjectAnimator.ofFloat(view, "alpha", 0f, 1f),
+                ObjectAnimator.ofFloat(view, "scaleX", 0.5f, 1f),
                 ObjectAnimator.ofFloat(view, "scaleY", 0.5f, 1f)
         );
-        animatorSet.setDuration(300); // 动画持续时间
+        animatorSet.setDuration(300);
+        animatorSet.setStartDelay(index * 50);
         animatorSet.start();
     }
 
-    /**
-     * 收起子菜单动画
-     * @param view 要收起的子菜单视图
-     * @param index 子菜单在所有子菜单中的索引 (与展开动画对应)
-     */
     private void animateMenuClose(final View view, int index) {
-        double currentAngleDegrees = -135; // 保持一致
+        double startAngleDegrees = -160;
+        double angleIncrement = 40;
+
+        double currentAngleDegrees = startAngleDegrees + (index * angleIncrement);
         double angleRad = Math.toRadians(currentAngleDegrees);
 
         float startX = (float) (Math.cos(angleRad) * radius);
@@ -184,22 +185,19 @@ public class MainActivity extends AppCompatActivity implements AccountAdapter.On
         animatorSet.playTogether(
                 ObjectAnimator.ofFloat(view, "translationX", startX, 0),
                 ObjectAnimator.ofFloat(view, "translationY", startY, 0),
-                ObjectAnimator.ofFloat(view, "alpha", 1f, 0f), // 淡出动画
-                ObjectAnimator.ofFloat(view, "scaleX", 1f, 0.5f), // 缩放动画
+                ObjectAnimator.ofFloat(view, "alpha", 1f, 0f),
+                ObjectAnimator.ofFloat(view, "scaleX", 1f, 0.5f),
                 ObjectAnimator.ofFloat(view, "scaleY", 1f, 0.5f)
         );
-        animatorSet.setDuration(300); // 动画持续时间
+        animatorSet.setDuration(300);
+        animatorSet.setStartDelay(index * 50);
         animatorSet.addListener(new android.animation.Animator.AnimatorListener() {
-            @Override
-            public void onAnimationStart(android.animation.Animator animation) {}
-            @Override
-            public void onAnimationEnd(android.animation.Animator animation) {
-                view.setVisibility(View.GONE); // 动画结束后隐藏视图
+            @Override public void onAnimationStart(android.animation.Animator animation) {}
+            @Override public void onAnimationEnd(android.animation.Animator animation) {
+                view.setVisibility(View.GONE);
             }
-            @Override
-            public void onAnimationCancel(android.animation.Animator animation) {}
-            @Override
-            public void onAnimationRepeat(android.animation.Animator animation) {}
+            @Override public void onAnimationCancel(android.animation.Animator animation) {}
+            @Override public void onAnimationRepeat(android.animation.Animator animation) {}
         });
         animatorSet.start();
     }

@@ -89,18 +89,17 @@ public class AccountAdapter extends BaseAdapter {
             holder.noteTv.setText(note);
         }
 
-        float studyMinutes = accountIn.getStudyTime(); // 获取以小时为单位的学习时长
-        float totalHours = (float) ((float)studyMinutes / 60); // 将小时转换为总分钟数
+        float studyMinutes = accountIn.getStudyTime(); // 获取以分钟为单位的学习时长
+        float totalHours = (float) ((float)studyMinutes / 60); // 将分钟转换为总小时数
         String displayTime;
         if (studyMinutes < 60) {
             displayTime = studyMinutes + " min";
         } else {
-            displayTime = String.format("%.1fh", totalHours); // 保持原有的小数位，或者根据需要调整
+            displayTime = String.format("%.1fh", totalHours);
         }
         holder.studyTv.setText(displayTime);
-        Log.d("AccountAdapter", "Study Time: " + totalHours + "h (" + studyMinutes + "min) displayed as: " + displayTime);
 
-        // 提取并设置开始时间（例如 "12:31"）
+        // 提取并设置开始时间
         String fullTimeStr = accountIn.getTime();
         String startTime = "";
         if (fullTimeStr != null && fullTimeStr.length() >= 5) {
@@ -110,7 +109,7 @@ public class AccountAdapter extends BaseAdapter {
             if (lastSpaceIndex != -1 && fullTimeStr.length() - lastSpaceIndex - 1 >= 5) {
                 startTime = fullTimeStr.substring(lastSpaceIndex + 1);
             } else {
-                startTime = fullTimeStr; // 备用，如果格式不符合预期
+                startTime = fullTimeStr;
             }
         }
         holder.tvStartTime.setText(startTime);
@@ -118,10 +117,9 @@ public class AccountAdapter extends BaseAdapter {
         // 设置完整的日期和时间字符串
         holder.timeTv.setText(fullTimeStr);
 
-        // !!! 设置删除按钮的点击监听器 !!!
+        // 设置删除按钮点击监听器
         holder.deleteBtn.setOnClickListener(v -> {
             // 获取要删除的条目的 ID
-            // Log.d(TAG, "Delete button clicked for item ID: " + accountIn.getId() + " at position: " + i);
             int itemIdToDelete = accountIn.getId();
             final int clickedPosition = i; // 获取点击时的正确位置
 
@@ -129,14 +127,9 @@ public class AccountAdapter extends BaseAdapter {
             int rowsDeleted = DBManager.deleteItemFromStudyTimeTableById(itemIdToDelete);
 
             if (rowsDeleted > 0) {
-                // 如果数据库删除成功，从 Adapter 的数据源中移除该条目
-                // 注意：在删除之前，确保 position 仍然有效，因为在异步操作或快速点击时，position 可能会改变
-                // 更好的做法是直接从数据库重新加载数据，或通过 ID 查找删除
-                // 但对于小型列表，直接移除 position 并刷新是可行的
                 if (clickedPosition < mDatas.size() && mDatas.get(clickedPosition).getId() == itemIdToDelete) {
                     mDatas.remove(clickedPosition);
                 } else {
-                    // 如果 position 不匹配，则需要重新加载整个列表
                     Log.w(TAG, "Position mismatch during delete, consider full reload.");
                 }
 
@@ -145,7 +138,7 @@ public class AccountAdapter extends BaseAdapter {
                 Toast.makeText(context, "记录删除成功！", Toast.LENGTH_SHORT).show();
                 Log.d(TAG, "Item deleted from DB and adapter for ID: " + itemIdToDelete);
 
-                // 如果你的 Activity/Fragment 需要知道数据被删除了，通过接口回调通知
+                // 接口回调通知
                 if (deleteListener != null) {
                     deleteListener.onItemDeleted();
                 }

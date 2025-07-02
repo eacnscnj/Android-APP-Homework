@@ -9,6 +9,7 @@ import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Calendar;
 
 // 管理数据库的类
 public class DBManager {
@@ -66,8 +67,7 @@ public class DBManager {
     public static void insertItemToTable(AccountIn accountIn){
         ContentValues values = new ContentValues();
         values.put("typename", accountIn.getTypename());
-        // !!! 修正这里: focuseImageID -> focusImageID
-        values.put("focusImageID", accountIn.getFocusImageID()); // **已修正为 focusImageID**
+        values.put("focusImageID", accountIn.getFocusImageID());
         values.put("note", accountIn.getNote());
         values.put("studyTime", accountIn.getStudyTime());
         values.put("time", accountIn.getTime());
@@ -115,7 +115,6 @@ public class DBManager {
                 String typename = cursor.getString(cursor.getColumnIndexOrThrow("typename"));
                 String note = cursor.getString(cursor.getColumnIndexOrThrow("note"));
                 String time = cursor.getString(cursor.getColumnIndexOrThrow("time"));
-                // !!! 修正这里: focuseImageID -> focusImageID
                 int focusImageID = cursor.getInt(cursor.getColumnIndexOrThrow("focusImageID")); // **已修正为 focusImageID**
                 int kind = cursor.getInt(cursor.getColumnIndexOrThrow("kind"));
                 float studyTime = cursor.getFloat(cursor.getColumnIndexOrThrow("studyTime"));
@@ -154,7 +153,6 @@ public class DBManager {
                 String typename = cursor.getString(cursor.getColumnIndexOrThrow("typename"));
                 String note = cursor.getString(cursor.getColumnIndexOrThrow("note"));
                 String time = cursor.getString(cursor.getColumnIndexOrThrow("time"));
-                // !!! 修正这里: focuseImageID -> focusImageID
                 int focusImageID = cursor.getInt(cursor.getColumnIndexOrThrow("focusImageID")); // **已修正为 focusImageID**
                 int kind = cursor.getInt(cursor.getColumnIndexOrThrow("kind"));
                 float studyTime = cursor.getFloat(cursor.getColumnIndexOrThrow("studyTime"));
@@ -193,9 +191,6 @@ public class DBManager {
     public static int deleteItemFromStudyTimeTableById(int id) {
         int rowsAffected = 0;
         try {
-            // "studyTimeTable" 是表名
-            // "id=?" 是 where 子句，表示 id 等于传入的 id
-            // new String[]{String.valueOf(id)} 是 whereArgs，提供 where 子句中的参数
             rowsAffected = db.delete("studyTimeTable", "id=?", new String[]{String.valueOf(id)});
             if (rowsAffected > 0) {
                 Log.i("DBManager", "Deleted " + rowsAffected + " row from studyTimeTable with id: " + id);
@@ -206,5 +201,162 @@ public class DBManager {
             Log.e("DBManager", "Error deleting from studyTimeTable with id " + id + ": " + e.getMessage(), e);
         }
         return rowsAffected;
+    }
+
+    /**
+     * 获取累计专注次数 (总条目数)
+     * @return 总条目数
+     */
+    public static int getTotalFocusCount() {
+        int count = 0;
+        Cursor cursor = null;
+        try {
+            cursor = db.rawQuery("SELECT COUNT(id) FROM studyTimeTable", null);
+            if (cursor.moveToFirst()) {
+                count = cursor.getInt(0);
+            }
+        } catch (Exception e) {
+            Log.e("DBManager", "Error getting total focus count: " + e.getMessage(), e);
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+        return count;
+    }
+
+    /**
+     * 获取累计总时长
+     * @return 总时长 (分钟)
+     */
+    public static float getTotalStudyTime() {
+        float totalTime = 0.0f;
+        Cursor cursor = null;
+        try {
+            cursor = db.rawQuery("SELECT SUM(studyTime) FROM studyTimeTable", null);
+            if (cursor.moveToFirst()) {
+                totalTime = cursor.getFloat(0);
+            }
+        } catch (Exception e) {
+            Log.e("DBManager", "Error getting total study time: " + e.getMessage(), e);
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+        return totalTime;
+    }
+
+    /**
+     * 获取最久一次学习记录的日期 (最早的记录日期)
+     * @return 以 Calendar 对象表示的最早记录日期，如果无记录则返回 null
+     */
+    @SuppressLint("Range")
+    public static Calendar getFirstRecordDate() {
+        Cursor cursor = null;
+        Calendar calendar = null;
+        try {
+            // 查询最早的 year, mounth, day
+            cursor = db.rawQuery("SELECT MIN(year), MIN(mounth), MIN(day) FROM studyTimeTable", null);
+            if (cursor.moveToFirst()) {
+                if (cursor.getInt(0) != 0) { // 假设 year 不会是 0
+                    int year = cursor.getInt(0);
+                    int month = cursor.getInt(1);
+                    int day = cursor.getInt(2);
+
+                    calendar = Calendar.getInstance();
+                    calendar.set(year, month - 1, day); // Calendar 月份从 0 开始
+                }
+            }
+        } catch (Exception e) {
+            Log.e("DBManager", "Error getting first record date: " + e.getMessage(), e);
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+        return calendar;
+    }
+
+    /**
+     * 获取指定日期的专注次数
+     * @param year 年
+     * @param month 月 (1-12)
+     * @param day 日
+     * @return 当天专注次数
+     */
+    public static int getDailyFocusCount(int year, int month, int day) {
+        int count = 0;
+        Cursor cursor = null;
+        try {
+            cursor = db.rawQuery("SELECT COUNT(id) FROM studyTimeTable WHERE year=? AND mounth=? AND day=?",
+                    new String[]{String.valueOf(year), String.valueOf(month), String.valueOf(day)});
+            if (cursor.moveToFirst()) {
+                count = cursor.getInt(0);
+            }
+        } catch (Exception e) {
+            Log.e("DBManager", "Error getting daily focus count: " + e.getMessage(), e);
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+        return count;
+    }
+
+    /**
+     * 获取指定日期的总时长
+     * @param year 年
+     * @param month 月 (1-12)
+     * @param day 日
+     * @return 当天总时长 (分钟)
+     */
+    public static float getDailyStudyTime(int year, int month, int day) {
+        float totalTime = 0.0f;
+        Cursor cursor = null;
+        try {
+            cursor = db.rawQuery("SELECT SUM(studyTime) FROM studyTimeTable WHERE year=? AND mounth=? AND day=?",
+                    new String[]{String.valueOf(year), String.valueOf(month), String.valueOf(day)});
+            if (cursor.moveToFirst()) {
+                totalTime = cursor.getFloat(0);
+            }
+        } catch (Exception e) {
+            Log.e("DBManager", "Error getting daily study time: " + e.getMessage(), e);
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+        return totalTime;
+    }
+
+    /**
+     * 获取指定日期的专注时间分布数据，按专注类型分组
+     * @param year 年
+     * @param month 月 (1-12)
+     * @param day 日
+     * @return Map<String, Float>，键为专注类型名称，值为该类型总时长
+     */
+    @SuppressLint("Range")
+    public static java.util.Map<String, Float> getDailyStudyTimeDistribution(int year, int month, int day) {
+        java.util.Map<String, Float> distribution = new java.util.LinkedHashMap<>(); // LinkedHashMap 保持插入顺序
+        Cursor cursor = null;
+        try {
+            String sql = "SELECT typename, SUM(studyTime) FROM studyTimeTable WHERE year=? AND mounth=? AND day=? GROUP BY typename";
+            cursor = db.rawQuery(sql, new String[]{String.valueOf(year), String.valueOf(month), String.valueOf(day)});
+
+            while (cursor.moveToNext()) {
+                String typename = cursor.getString(cursor.getColumnIndexOrThrow("typename"));
+                float totalTime = cursor.getFloat(cursor.getColumnIndexOrThrow("SUM(studyTime)"));
+                distribution.put(typename, totalTime);
+            }
+        } catch (Exception e) {
+            Log.e("DBManager", "Error getting daily study time distribution: " + e.getMessage(), e);
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+        return distribution;
     }
 }
