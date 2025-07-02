@@ -15,7 +15,7 @@ import java.util.Calendar;
 public class DBManager {
     private static SQLiteDatabase db;
 
-    public static void initDB(Context context){
+    public static void initDB(Context context) {
         DBOpenHelper helper = new DBOpenHelper(context);
         db = helper.getWritableDatabase();
         if (db != null) {
@@ -26,7 +26,7 @@ public class DBManager {
     }
 
     @SuppressLint("Range")
-    public static List<TypeIn> getTypeList(int kind){
+    public static List<TypeIn> getTypeList(int kind) {
         List<TypeIn> list = new ArrayList<>();
 
         String sql = "select * from typetb where kind = " + kind;
@@ -34,7 +34,7 @@ public class DBManager {
         try {
             cursor = db.rawQuery(sql, null);
 
-            while(cursor.moveToNext()){
+            while (cursor.moveToNext()) {
                 int id = cursor.getInt(cursor.getColumnIndexOrThrow("id"));
                 String typename = cursor.getString(cursor.getColumnIndexOrThrow("typename"));
                 int imageID = cursor.getInt(cursor.getColumnIndexOrThrow("imageID"));
@@ -64,20 +64,8 @@ public class DBManager {
     }
 
     // 记录表插入数据
-    public static void insertItemToTable(AccountIn accountIn){
+    public static void insertItemToTable(AccountIn accountIn) {
         ContentValues values = new ContentValues();
-//<<<<<<< Login_222
-        values.put("typename",accountIn.getTypename());
-        values.put("focuseImageID",accountIn.getFocusImageID());
-        values.put("note",accountIn.getNote());
-        values.put("studyTime",accountIn.getStudyTime());
-        values.put("time",accountIn.getTime());
-        values.put("year",accountIn.getYear());
-        values.put("mounth",accountIn.getMounth());
-        values.put("day",accountIn.getDay());
-        values.put("kind",accountIn.getKind());
-        db.insert("studyTimeTable",null,values);
-        Log.i("animee","insert is ok");
 //=======
         values.put("typename", accountIn.getTypename());
         values.put("focusImageID", accountIn.getFocusImageID());
@@ -118,13 +106,13 @@ public class DBManager {
     }
 
     @SuppressLint("Range")
-    public static List<AccountIn> getAccountListFromAccounttb(int year, int mounth, int day){
+    public static List<AccountIn> getAccountListFromAccounttb(int year, int mounth, int day) {
         List<AccountIn> list = new ArrayList<>();
         String sql = "select * from studyTimeTable where year=? and mounth=? and day=? order by id desc";
         Cursor cursor = null;
         try {
             cursor = db.rawQuery(sql, new String[]{String.valueOf(year), String.valueOf(mounth), String.valueOf(day)});
-            while(cursor.moveToNext()){
+            while (cursor.moveToNext()) {
                 int id = cursor.getInt(cursor.getColumnIndexOrThrow("id"));
                 String typename = cursor.getString(cursor.getColumnIndexOrThrow("typename"));
                 String note = cursor.getString(cursor.getColumnIndexOrThrow("note"));
@@ -252,7 +240,7 @@ public class DBManager {
             // 查询所有需要的字段
             cursor = db.query(
                     "user_table",
-                    new String[]{"id", "username","password", "register_type"}, // 查询的列
+                    new String[]{"id", "username", "password", "register_type"}, // 查询的列
                     "username = ? AND password = ?",                // WHERE条件
                     new String[]{username, password},               // 条件参数
                     null, null, null
@@ -270,9 +258,9 @@ public class DBManager {
                         cursor.getString(cursor.getColumnIndexOrThrow("password")),
                         cursor.getInt(cursor.getColumnIndexOrThrow("register_type"))
                 );
-            }else{ //密码错误
+            } else { //密码错误
                 Log.d("Login", "密码错误，用户名: " + username);
-                return new UserInfo(-1, username,"", -1);
+                return new UserInfo(-1, username, "", -1);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -283,10 +271,11 @@ public class DBManager {
     }
 
 
-}
 //=======
+
     /**
      * 根据传入的 id 删除 studyTimeTable 表中的一条记录
+     *
      * @param id 要删除记录的 id
      * @return 返回受影响的行数，如果删除失败则返回0
      */
@@ -307,6 +296,7 @@ public class DBManager {
 
     /**
      * 获取累计专注次数 (总条目数)
+     *
      * @return 总条目数
      */
     public static int getTotalFocusCount() {
@@ -329,6 +319,7 @@ public class DBManager {
 
     /**
      * 获取累计总时长
+     *
      * @return 总时长 (分钟)
      */
     public static float getTotalStudyTime() {
@@ -351,6 +342,7 @@ public class DBManager {
 
     /**
      * 获取最久一次学习记录的日期 (最早的记录日期)
+     *
      * @return 以 Calendar 对象表示的最早记录日期，如果无记录则返回 null
      */
     @SuppressLint("Range")
@@ -382,9 +374,10 @@ public class DBManager {
 
     /**
      * 获取指定日期的专注次数
-     * @param year 年
+     *
+     * @param year  年
      * @param month 月 (1-12)
-     * @param day 日
+     * @param day   日
      * @return 当天专注次数
      */
     public static int getDailyFocusCount(int year, int month, int day) {
@@ -408,9 +401,10 @@ public class DBManager {
 
     /**
      * 获取指定日期的总时长
-     * @param year 年
+     *
+     * @param year  年
      * @param month 月 (1-12)
-     * @param day 日
+     * @param day   日
      * @return 当天总时长 (分钟)
      */
     public static float getDailyStudyTime(int year, int month, int day) {
@@ -434,9 +428,10 @@ public class DBManager {
 
     /**
      * 获取指定日期的专注时间分布数据，按专注类型分组
-     * @param year 年
+     *
+     * @param year  年
      * @param month 月 (1-12)
-     * @param day 日
+     * @param day   日
      * @return Map<String, Float>，键为专注类型名称，值为该类型总时长
      */
     @SuppressLint("Range")
