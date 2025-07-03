@@ -7,27 +7,20 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
-import android.widget.ListView;
+import android.widget.LinearLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.example.hello_world.Database.AccountIn;
 import com.example.hello_world.Database.DBManager;
-import com.example.hello_world.adapter.AccountAdapter;
+import com.example.hello_world.fragments.RecordFragment;
+import com.example.hello_world.fragments.CommunityFragment;
+import com.example.hello_world.fragments.MineFragment;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
+public class MainActivity extends AppCompatActivity /* implements AccountAdapter.OnItemDeleteListener */ {
 
-public class MainActivity extends AppCompatActivity implements AccountAdapter.OnItemDeleteListener {
-
-    ListView todayLv;
-    List<AccountIn> mDatas;
-    AccountAdapter adapter;
-    int year, month, day;
     private static final String TAG = "MainActivityDebug";
 
     private AppCompatButton editButton;
@@ -37,14 +30,19 @@ public class MainActivity extends AppCompatActivity implements AccountAdapter.On
 
     private int radius = 400;
 
-    private int currentUserId; // **新增：存储当前用户ID**
+    private int currentUserId; // 当前用户ID
+
+    // 底栏容器
+    private LinearLayout navRecordContainer, navCommunityContainer, navMineContainer;
+    private LinearLayout currentSelectedContainer;
+
+    // 三个Fragment
+    private RecordFragment recordFragment;
+    private CommunityFragment communityFragment;
+    private MineFragment mineFragment;
 
     private void initTime() {
-        Calendar calendar = Calendar.getInstance();
-        year = calendar.get(Calendar.YEAR);
-        month = calendar.get(Calendar.MONTH) + 1;
-        day = calendar.get(Calendar.DAY_OF_MONTH);
-        Log.d(TAG, "Current date initialized to: " + year + "-" + month + "-" + day);
+        // 这里如果不用时间可删，否则保留
     }
 
     @Override
@@ -60,27 +58,24 @@ public class MainActivity extends AppCompatActivity implements AccountAdapter.On
 
         DBManager.initDB(this);
 
-        // **获取当前用户ID**
+        // 获取当前用户ID
         currentUserId = DBManager.getCurrentUserId();
         if (currentUserId == -1) {
             Log.e(TAG, "Error: currentUserId is -1. User might not be logged in or ID not set.");
-            // 考虑在此处跳转到登录界面或给出错误提示
-            // finish();
-            // Intent loginIntent = new Intent(this, LoginActivity.class);
-            // startActivity(loginIntent);
-            // return;
         } else {
             Log.d(TAG, "MainActivity initialized for user ID: " + currentUserId);
         }
 
-
         initTime();
 
+        // 以下注释，数据和适配器逻辑已移至 RecordFragment
+        /*
         todayLv = findViewById(R.id.main_lv);
         mDatas = new ArrayList<>();
-        adapter = new AccountAdapter(this, mDatas, currentUserId); // **修改：传入 currentUserId**
+        adapter = new AccountAdapter(this, mDatas, currentUserId);
         todayLv.setAdapter(adapter);
         adapter.setOnItemDeleteListener(this);
+        */
 
         editButton = findViewById(R.id.main_btn_edit);
         statisticsButton = findViewById(R.id.main_btn_statistics);
@@ -91,24 +86,64 @@ public class MainActivity extends AppCompatActivity implements AccountAdapter.On
         }
         moreButton = findViewById(R.id.main_btn_more);
 
+        /*
         loadDBData();
+        */
+
+        navRecordContainer = findViewById(R.id.nav_record_container);
+        navCommunityContainer = findViewById(R.id.nav_community_container);
+        navMineContainer = findViewById(R.id.nav_mine_container);
+
+        // 默认选中第一个
+        currentSelectedContainer = navRecordContainer;
+        currentSelectedContainer.setSelected(true);
+
+        // 初始化 Fragment
+        recordFragment = new RecordFragment();
+        communityFragment = new CommunityFragment();
+        mineFragment = new MineFragment();
+
+        switchFragment(recordFragment);
+    }
+
+    // 设置底栏按钮状态
+    private void selectNavContainer(LinearLayout selected) {
+        if (currentSelectedContainer != null) {
+            currentSelectedContainer.setSelected(false);
+        }
+        selected.setSelected(true);
+        currentSelectedContainer = selected;
+    }
+
+    // 切换 Fragment
+    private void switchFragment(androidx.fragment.app.Fragment targetFragment) {
+        androidx.fragment.app.FragmentManager fm = getSupportFragmentManager();
+        androidx.fragment.app.FragmentTransaction transaction = fm.beginTransaction();
+
+        if (recordFragment.isAdded()) transaction.hide(recordFragment);
+        if (communityFragment.isAdded()) transaction.hide(communityFragment);
+        if (mineFragment.isAdded()) transaction.hide(mineFragment);
+
+        if (!targetFragment.isAdded()) {
+            transaction.add(R.id.fragment_container, targetFragment);
+        }
+        transaction.show(targetFragment);
+        transaction.commitAllowingStateLoss();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         Log.d(TAG, "MainActivity onResume called.");
-        // **在 onResume 再次获取确保用户 ID 是最新的，尽管通常在 onCreate 已经设置**
         currentUserId = DBManager.getCurrentUserId();
         if (currentUserId == -1) {
             Log.e(TAG, "Error: currentUserId is -1 in onResume.");
-            // 再次处理未登录情况
         }
-        loadDBData();
+        // 数据刷新逻辑放到各Fragment中
     }
 
+    /*
     private void loadDBData() {
-        // **修改：调用 DBManager.getAllAccountList() 时传入 currentUserId**
         List<AccountIn> list = DBManager.getAllAccountList(currentUserId);
         Log.d(TAG, "Loaded " + list.size() + " items for user " + currentUserId + " from DB.");
         mDatas.clear();
@@ -121,17 +156,17 @@ public class MainActivity extends AppCompatActivity implements AccountAdapter.On
         Log.d(TAG, "onItemDeleted callback received, reloading data.");
         loadDBData();
     }
+    */
 
     public void onClick(View view) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.main_iv_search:
                 Log.d(TAG, "Search button clicked.");
                 break;
             case R.id.main_btn_edit:
                 Log.d(TAG, "Edit (Record) button clicked. Navigating to RecordActivity.");
                 toggleRadialMenu();
-                Intent jmp=new Intent(this,RecordActivity.class);
-                // **传递 currentUserId 到 RecordActivity**
+                Intent jmp = new Intent(this, RecordActivity.class);
                 jmp.putExtra("USER_ID", currentUserId);
                 startActivity(jmp);
                 break;
@@ -139,7 +174,6 @@ public class MainActivity extends AppCompatActivity implements AccountAdapter.On
                 Log.d(TAG, "Statistics button clicked. Navigating to StatisticsActivity.");
                 toggleRadialMenu();
                 Intent statsJmp = new Intent(this, StatisticsActivity.class);
-                // **传递 currentUserId 到 StatisticsActivity**
                 statsJmp.putExtra("USER_ID", currentUserId);
                 startActivity(statsJmp);
                 break;
@@ -147,23 +181,30 @@ public class MainActivity extends AppCompatActivity implements AccountAdapter.On
                 Log.d(TAG, "More button clicked. Toggling radial menu.");
                 toggleRadialMenu();
                 break;
+            case R.id.nav_record_container:
+                selectNavContainer(navRecordContainer);
+                switchFragment(recordFragment);
+                break;
+            case R.id.nav_community_container:
+                selectNavContainer(navCommunityContainer);
+                switchFragment(communityFragment);
+                break;
+            case R.id.nav_mine_container:
+                selectNavContainer(navMineContainer);
+                switchFragment(mineFragment);
+                break;
         }
     }
 
-    // ... (toggleRadialMenu, animateMenuOpen, animateMenuClose 方法保持不变) ...
-    /**
-     * 切换径向菜单的展开/收起状态
-     * 子菜单在这里加入到收起和展开列表中
-     */
+    // toggleRadialMenu 和动画相关代码保持不变
+
     private void toggleRadialMenu() {
         if (isMenuOpen) {
-            // 收起菜单
             animateMenuClose(editButton, 0);
             animateMenuClose(statisticsButton, 1);
             moreButton.animate().rotation(0f).setDuration(300).start();
             isMenuOpen = false;
         } else {
-            // 展开菜单
             editButton.setVisibility(View.VISIBLE);
             statisticsButton.setVisibility(View.VISIBLE);
             animateMenuOpen(editButton, 0);
@@ -176,10 +217,8 @@ public class MainActivity extends AppCompatActivity implements AccountAdapter.On
     private void animateMenuOpen(View view, int index) {
         double startAngleDegrees = -160;
         double angleIncrement = 40;
-
         double currentAngleDegrees = startAngleDegrees + (index * angleIncrement);
         double angleRad = Math.toRadians(currentAngleDegrees);
-
         float targetX = (float) (Math.cos(angleRad) * radius);
         float targetY = (float) (Math.sin(angleRad) * radius);
 
@@ -198,13 +237,11 @@ public class MainActivity extends AppCompatActivity implements AccountAdapter.On
         animatorSet.start();
     }
 
-    private void animateMenuClose(final View view, int index) {
+    private void animateMenuClose(View view, int index) {
         double startAngleDegrees = -160;
         double angleIncrement = 40;
-
         double currentAngleDegrees = startAngleDegrees + (index * angleIncrement);
         double angleRad = Math.toRadians(currentAngleDegrees);
-
         float startX = (float) (Math.cos(angleRad) * radius);
         float startY = (float) (Math.sin(angleRad) * radius);
 

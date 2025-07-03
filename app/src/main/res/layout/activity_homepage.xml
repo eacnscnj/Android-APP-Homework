@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    >
+
+    <!-- 用户头像 -->
+    <ImageView
+        android:id="@+id/iv_avatar"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="24dp"
+        android:src="@drawable/me"
+        android:contentDescription="用户头像"
+        android:scaleType="centerCrop"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:clickable="true"
+        android:focusable="true"
+        android:padding="2dp"
+        android:backgroundTint="?attr/colorPrimary"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- 用户名 -->
+    <TextView
+        android:id="@+id/tv_username"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="青春废物少年不会碰到蓝发饭桶败犬"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="@android:color/black"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@id/iv_avatar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- 分隔线 -->
+    <View
+        android:id="@+id/divider"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:background="#33000000"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintTop_toBottomOf="@id/tv_username"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- 使用帮助 -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/card_help"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:elevation="2dp"
+        android:backgroundTint="#F5F5F5"
+        app:cardCornerRadius="8dp"
+        app:layout_constraintTop_toBottomOf="@id/divider"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <TextView
+            android:id="@+id/tv_help"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:drawableStart="@drawable/ic_help_outline"
+            android:drawablePadding="8dp"
+            android:text="使用帮助"
+            android:textSize="16sp"
+            android:textColor="@android:color/black" />
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- 我的目标 -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/card_goals"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:elevation="2dp"
+        android:backgroundTint="#F5F5F5"
+        app:cardCornerRadius="8dp"
+        app:layout_constraintTop_toBottomOf="@id/card_help"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <TextView
+            android:id="@+id/tv_goals"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:drawableStart="@drawable/ic_flag"
+            android:drawablePadding="8dp"
+            android:text="我的目标"
+            android:textSize="16sp"
+            android:textColor="@android:color/black" />
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- 我的记录 -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/card_records"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:elevation="2dp"
+        android:backgroundTint="#F5F5F5"
+        app:cardCornerRadius="8dp"
+        app:layout_constraintTop_toBottomOf="@id/card_goals"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <TextView
+            android:id="@+id/tv_records"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:drawableStart="@drawable/ic_history"
+            android:drawablePadding="8dp"
+            android:text="我的记录"
+            android:textSize="16sp"
+            android:textColor="@android:color/black" />
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- 退出登录按钮 -->
+    <Button
+        android:id="@+id/btn_logout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="退出登录"
+        android:textAllCaps="false"
+        android:padding="12dp"
+        android:layout_marginTop="32dp"
+        android:backgroundTint="?attr/colorAccent"
+        android:textColor="@android:color/white"
+        app:layout_constraintTop_toBottomOf="@id/card_records"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
