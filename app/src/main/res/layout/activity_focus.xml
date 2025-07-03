@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".FocusActivity">
 
+
     <!-- 背景图片 -->
     <ImageView
         android:id="@+id/backgroundImage"
@@ -23,12 +24,23 @@
         android:gravity="center"
         android:padding="24dp">
 
+        <TextView
+            android:id="@+id/projectNameTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
+            android:layout_marginHorizontal="20dp"
+            android:text="专注项目：无标题专注"
+            android:textSize="22sp"
+            android:textColor="@android:color/white"
+            android:textStyle="bold"
+            android:gravity="center" />
         <!-- 诗句展示 -->
         <TextView
             android:id="@+id/poetryTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/white"
+            android:textColor="@color/pink"
             android:textSize="18sp"
             android:textStyle="italic"
             android:maxWidth="300dp"

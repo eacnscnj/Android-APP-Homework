@@ -39,7 +39,8 @@
         <activity
             android:name=".FocusActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"
-            android:exported="false" />
+            android:launchMode="singleTask"
+            android:exported="true" />
     </application>
 
 </manifest>
