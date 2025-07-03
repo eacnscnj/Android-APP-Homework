@@ -20,58 +20,63 @@ import com.example.hello_world.Database.UserInfo;
 public class LoginActivity extends AppCompatActivity {
     private EditText et_username;
     private EditText et_password;
+
+    private static final String TAG = "LoginActivity";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_login);
 
+        et_username = findViewById(R.id.et_username);
+        et_password = findViewById(R.id.et_password);
 
-        //初始化控件
-        et_username=findViewById(R.id.et_username);
-        et_password=findViewById(R.id.et_password);
-        //点击注册
         findViewById(R.id.register).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //跳转到注册页面
-                Intent intent  =new Intent(LoginActivity.this,RegisterActivity.class);
+                Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
                 startActivity(intent);
             }
         });
 
-        //登录
         findViewById(R.id.login).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String username =et_username.getText().toString();
-                String password=et_password.getText().toString();
-                if(TextUtils.isEmpty(username)||TextUtils.isEmpty(password)){
+                String username = et_username.getText().toString().trim();
+                String password = et_password.getText().toString().trim();
+
+                if (TextUtils.isEmpty(username) || TextUtils.isEmpty(password)) {
                     Toast.makeText(LoginActivity.this, "请输入用户名或密码", Toast.LENGTH_SHORT).show();
-                }else{
-//<<<<<<< Login_222
-                    //判断用户是否合法
-                    UserInfo userInfo= DBManager.query_User_From_usertable(username,password);
-                    if(userInfo==null){
-                        Toast.makeText(LoginActivity.this, "用户名无效", Toast.LENGTH_SHORT).show();
-                    }else if(userInfo.get_id()==-1){
+                } else {
+                    UserInfo userInfo = DBManager.query_User_From_usertable(username, password);
+
+                    if (userInfo == null) {
+                        Toast.makeText(LoginActivity.this, "用户名不存在", Toast.LENGTH_SHORT).show();
+                        Log.d(TAG, "Login failed: Username '" + username + "' does not exist.");
+                    } else if (userInfo.get_id() == -1) {
                         Toast.makeText(LoginActivity.this, "密码错误", Toast.LENGTH_SHORT).show();
-                        //Log.i("tag","登录失败失败失败失败失败失败失败失败失败失败");
-                    }else{
-                        /*
-                        待修改 ，没有做出不同用户的区分
-                         */
+                        Log.d(TAG, "Login failed for '" + username + "': Incorrect password.");
+                    } else {
                         Toast.makeText(LoginActivity.this, "登录成功", Toast.LENGTH_SHORT).show();
-                        Intent intent =new Intent(LoginActivity.this,MainActivity.class);
-                        startActivity(intent);
+                        Log.d(TAG, "Login successful for user: " + userInfo.getUsername() + " (ID: " + userInfo.get_id() + ")");
+
+                        DBManager.setCurrentUserId(userInfo.get_id());
+
+                        // **根据 register_type 跳转到不同页面**
+                        if (userInfo.getRegister_type() == 1) { // 管理员
+                            Intent intent = new Intent(LoginActivity.this, AdminActivity.class);
+                            startActivity(intent);
+                        } else { // 普通用户
+                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                            startActivity(intent);
+                        }
                         finish();
                     }
-//=======
-
-//>>>>>>> main
                 }
             }
         });
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);

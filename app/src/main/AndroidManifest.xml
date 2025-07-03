@@ -37,6 +37,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".StatisticsActivity" />
+        <activity
+            android:name=".AdminActivity"
+            android:exported="false" />
     </application>
 
 </manifest>

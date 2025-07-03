@@ -9,7 +9,7 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.AppCompatButton; // 确保导入
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -30,12 +30,14 @@ public class MainActivity extends AppCompatActivity implements AccountAdapter.On
     int year, month, day;
     private static final String TAG = "MainActivityDebug";
 
-    private AppCompatButton editButton; // “记一下”按钮
-    private ImageButton moreButton; // “更多”按钮
+    private AppCompatButton editButton;
+    private ImageButton moreButton;
     private AppCompatButton statisticsButton;
-    private boolean isMenuOpen = false; // 标志菜单是否打开
+    private boolean isMenuOpen = false;
 
-    private int radius = 400; // 展开圆的半径 (单位: 像素)。根据UI效果调整
+    private int radius = 400;
+
+    private int currentUserId; // **新增：存储当前用户ID**
 
     private void initTime() {
         Calendar calendar = Calendar.getInstance();
@@ -48,7 +50,7 @@ public class MainActivity extends AppCompatActivity implements AccountAdapter.On
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main); // EdgeToEdge可以按需保留或移除
+        setContentView(R.layout.activity_main);
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -58,15 +60,28 @@ public class MainActivity extends AppCompatActivity implements AccountAdapter.On
 
         DBManager.initDB(this);
 
+        // **获取当前用户ID**
+        currentUserId = DBManager.getCurrentUserId();
+        if (currentUserId == -1) {
+            Log.e(TAG, "Error: currentUserId is -1. User might not be logged in or ID not set.");
+            // 考虑在此处跳转到登录界面或给出错误提示
+            // finish();
+            // Intent loginIntent = new Intent(this, LoginActivity.class);
+            // startActivity(loginIntent);
+            // return;
+        } else {
+            Log.d(TAG, "MainActivity initialized for user ID: " + currentUserId);
+        }
+
+
         initTime();
 
         todayLv = findViewById(R.id.main_lv);
         mDatas = new ArrayList<>();
-        adapter = new AccountAdapter(this, mDatas);
+        adapter = new AccountAdapter(this, mDatas, currentUserId); // **修改：传入 currentUserId**
         todayLv.setAdapter(adapter);
         adapter.setOnItemDeleteListener(this);
 
-        // 获取按钮引用
         editButton = findViewById(R.id.main_btn_edit);
         statisticsButton = findViewById(R.id.main_btn_statistics);
         if (statisticsButton == null) {
@@ -83,12 +98,19 @@ public class MainActivity extends AppCompatActivity implements AccountAdapter.On
     protected void onResume() {
         super.onResume();
         Log.d(TAG, "MainActivity onResume called.");
+        // **在 onResume 再次获取确保用户 ID 是最新的，尽管通常在 onCreate 已经设置**
+        currentUserId = DBManager.getCurrentUserId();
+        if (currentUserId == -1) {
+            Log.e(TAG, "Error: currentUserId is -1 in onResume.");
+            // 再次处理未登录情况
+        }
         loadDBData();
     }
 
     private void loadDBData() {
-        List<AccountIn> list = DBManager.getAllAccountList();
-        Log.d(TAG, "Loaded " + list.size() + " total items from DB.");
+        // **修改：调用 DBManager.getAllAccountList() 时传入 currentUserId**
+        List<AccountIn> list = DBManager.getAllAccountList(currentUserId);
+        Log.d(TAG, "Loaded " + list.size() + " items for user " + currentUserId + " from DB.");
         mDatas.clear();
         mDatas.addAll(list);
         adapter.notifyDataSetChanged();
@@ -107,32 +129,28 @@ public class MainActivity extends AppCompatActivity implements AccountAdapter.On
                 break;
             case R.id.main_btn_edit:
                 Log.d(TAG, "Edit (Record) button clicked. Navigating to RecordActivity.");
-                toggleRadialMenu(); // 点击子菜单后，自动收起菜单
+                toggleRadialMenu();
                 Intent jmp=new Intent(this,RecordActivity.class);
+                // **传递 currentUserId 到 RecordActivity**
+                jmp.putExtra("USER_ID", currentUserId);
                 startActivity(jmp);
-//<<<<<<< Login_222
-//=======
-//<<<<<<< main
-//>>>>>>> main
                 break;
-            case R.id.main_btn_statistics: // 新增 case
+            case R.id.main_btn_statistics:
                 Log.d(TAG, "Statistics button clicked. Navigating to StatisticsActivity.");
-                toggleRadialMenu(); // 点击子菜单后，自动收起菜单
+                toggleRadialMenu();
                 Intent statsJmp = new Intent(this, StatisticsActivity.class);
+                // **传递 currentUserId 到 StatisticsActivity**
+                statsJmp.putExtra("USER_ID", currentUserId);
                 startActivity(statsJmp);
-
-
-//=======
-                //finish();
-//>>>>>>> main
                 break;
-           case R.id.main_btn_more:
+            case R.id.main_btn_more:
                 Log.d(TAG, "More button clicked. Toggling radial menu.");
                 toggleRadialMenu();
                 break;
         }
     }
 
+    // ... (toggleRadialMenu, animateMenuOpen, animateMenuClose 方法保持不变) ...
     /**
      * 切换径向菜单的展开/收起状态
      * 子菜单在这里加入到收起和展开列表中
@@ -156,8 +174,8 @@ public class MainActivity extends AppCompatActivity implements AccountAdapter.On
     }
 
     private void animateMenuOpen(View view, int index) {
-        double startAngleDegrees = -160; // 调整起始角度，例如从左下方开始
-        double angleIncrement = 40; // 调整每个按钮之间的角度间隔
+        double startAngleDegrees = -160;
+        double angleIncrement = 40;
 
         double currentAngleDegrees = startAngleDegrees + (index * angleIncrement);
         double angleRad = Math.toRadians(currentAngleDegrees);

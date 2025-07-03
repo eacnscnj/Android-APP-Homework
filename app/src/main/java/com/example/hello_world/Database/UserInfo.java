@@ -35,7 +35,7 @@ public class UserInfo {
         this._id = _id;
     }
 
-    public String getUsername(String username) {
+    public String getUsername() {
         return this.username;
     }
 
@@ -43,7 +43,7 @@ public class UserInfo {
         this.username = username;
     }
 
-    public String getPassword(String password) {
+    public String getPassword() {
         return this.password;
     }
 

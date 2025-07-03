@@ -27,7 +27,7 @@ public class DBOpenHelper extends SQLiteOpenHelper {
     int kind;*/
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        Log.i("tag","manbabbbbbbbbbbbbbbbbbbbbbbbbbbbb");
+        Log.i("tag","Database onCreate called.");
 
         String sqlCreat="create table typetb(" +
                 "id integer primary key autoincrement," +
@@ -50,12 +50,9 @@ public class DBOpenHelper extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL(sql_Create_user_table);
         insertUserTable(sqLiteDatabase);
 
-
-
-
         //记录表
         String sql = "create table studyTimeTable(id integer primary key autoincrement,typename varchar(12),focusImageID integer,note varchar(128),studyTime float,time varchar(64)," +
-                "year integer,mounth integer,day integer, kind integer)";
+                "year integer,mounth integer,day integer, kind integer, userId integer)"; // **新增 userId 字段**
         sqLiteDatabase.execSQL(sql);
     }
 

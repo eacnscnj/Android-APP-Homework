@@ -14,7 +14,7 @@ public class PublicFragment extends BaseFragment {
         typeInList = new ArrayList<>();
         adapter = new TypeBaseAdapter(getContext(), typeInList);
         typeGrid.setAdapter(adapter);
-        List<TypeIn> outList = DBManager.getTypeList(0);
+        List<TypeIn> outList = DBManager.getTypeList(0); // getTypeList 不受 userId 影响
         typeInList.addAll(outList);
         adapter.notifyDataSetChanged();
     }
@@ -22,6 +22,7 @@ public class PublicFragment extends BaseFragment {
     @Override
     public void saveAccountToDB() {
         accountIn.setKind(0);
+        // userId 已经在 BaseFragment 的 onCreate 中设置到 accountIn
         DBManager.insertItemToTable(accountIn);
     }
 }

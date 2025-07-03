@@ -13,6 +13,7 @@ public class AccountIn {
     int mounth;
     int day;
     int kind;//pubilc 0 , major1;
+    int userId; // **新增 userId 字段**
 
     public String getTime() {
         return time;
@@ -94,6 +95,11 @@ public class AccountIn {
         this.kind = kind;
     }
 
+    // **新增 userId 的 Getter 和 Setter**
+    public int getUserId() { return userId; }
+
+    public void setUserId(int userId) { this.userId = userId; }
+
     public AccountIn() {
     }
 
@@ -107,5 +113,18 @@ public class AccountIn {
         this.mounth = mounth;
         this.day = day;
         this.kind = kind;
+    }
+
+    public AccountIn(int id, String typename, int focusImageID, String note, float studyTime, int year, int mounth, int day, int kind, int userId) {
+        this.id = id;
+        this.typename = typename;
+        this.focusImageID = focusImageID;
+        this.note = note;
+        this.studyTime = studyTime;
+        this.year = year;
+        this.mounth = mounth;
+        this.day = day;
+        this.kind = kind;
+        this.userId = userId;
     }
 }
