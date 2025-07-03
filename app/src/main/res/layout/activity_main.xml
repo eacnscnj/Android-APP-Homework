@@ -1,90 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/grey"
-    android:orientation="vertical"
-    tools:context=".MainActivity">
+    android:background="@color/grey">
 
-    <!-- 顶部标题栏 -->
-    <RelativeLayout
-        android:id="@+id/main_top_layout"
-        android:layout_width="match_parent"
-        android:layout_height="50dp">
-        <TextView
-            android:text="@string/app_name"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:padding="11dp"
-            android:textStyle="bold"
-            android:textSize="20sp"
-            android:shadowColor="@color/black"
-            android:id="@+id/main_title" />
-        <ImageView
-            android:id="@+id/main_iv_search"
-            android:layout_width="56dp"
-            android:layout_height="match_parent"
-            android:src="@mipmap/search"
-            android:layout_alignParentRight="true"
-            android:onClick="onClick" />
-    </RelativeLayout>
-
-    <!-- 主体内容列表 -->
-    <ListView
-        android:id="@+id/main_lv"
+    <FrameLayout
+        android:id="@+id/fragment_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/main_top_layout"
-        android:layout_above="@id/bottom_nav"
-        android:layout_marginTop="3dp"
-        android:background="@color/grey"
-        android:divider="@null"
-        android:dividerHeight="8dp"
-        android:padding="8dp"
-        android:scrollbars="none" />
+        android:layout_above="@id/bottom_nav" />
 
-    <!-- 圆形按钮部分 -->
     <RelativeLayout
         android:id="@+id/radial_menu_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clipChildren="false"
-        android:clipToPadding="false">
-
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/main_btn_edit"
-            android:onClick="onClick"
-            android:layout_width="56dp"
-            android:layout_height="56dp"
-            android:background="@drawable/main_recordbtn_bg"
-            android:text="@string/edit_one"
-            android:textStyle="bold"
-            android:gravity="center"
-            android:visibility="gone"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentBottom="true"
-            android:layout_margin="8dp"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
-            android:elevation="8dp" />
+        android:clipToPadding="false"
+        android:layout_above="@id/bottom_nav"> <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/main_btn_edit"
+        android:onClick="onClick"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:background="@drawable/main_recordbtn_bg"
+        android:text="@string/edit_one"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:visibility="gone"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="8dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:elevation="8dp" />
 
         <ImageButton
             android:id="@+id/main_btn_more"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_alignParentRight="true"
-            android:layout_above="@id/bottom_nav"
-            android:layout_margin="20dp"
+            android:layout_alignParentBottom="true"  android:layout_margin="20dp"
             android:src="@mipmap/more"
             android:scaleType="fitCenter"
             android:background="@drawable/main_morebtn_bg"
             android:onClick="onClick" />
-
-
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/main_btn_statistics"
@@ -102,80 +61,76 @@
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
             android:elevation="8dp" />
-
-        <!-- ✅ 底部导航栏 -->
-        <LinearLayout
-            android:id="@+id/bottom_nav"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:layout_alignParentBottom="true"
-            android:orientation="horizontal"
-            android:background="#FFFFFF"
-            android:weightSum="3"
-            android:elevation="8dp">
-
-            <!-- 记录按钮区域 -->
-            <LinearLayout
-                android:id="@+id/nav_record_container"
-                android:layout_weight="1"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:clickable="true"
-                android:focusable="true"
-                android:background="@drawable/nav_item_background"
-                android:onClick="onClick">
-
-                <ImageButton
-                    android:id="@+id/nav_record"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@android:color/transparent"
-                    android:src="@drawable/record" />
-            </LinearLayout>
-
-            <!-- 社区按钮区域 -->
-            <LinearLayout
-                android:id="@+id/nav_community_container"
-                android:layout_weight="1"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:clickable="true"
-                android:focusable="true"
-                android:background="@drawable/nav_item_background"
-                android:onClick="onClick">
-
-                <ImageButton
-                    android:id="@+id/nav_community"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@android:color/transparent"
-                    android:src="@drawable/society" />
-            </LinearLayout>
-
-            <!-- 我的按钮区域 -->
-            <LinearLayout
-                android:id="@+id/nav_mine_container"
-                android:layout_weight="1"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:clickable="true"
-                android:focusable="true"
-                android:background="@drawable/nav_item_background"
-                android:onClick="onClick">
-
-                <ImageButton
-                    android:id="@+id/nav_mine"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@android:color/transparent"
-                    android:src="@drawable/profile" />
-            </LinearLayout>
-        </LinearLayout>
     </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/bottom_nav"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal"
+        android:background="#FFFFFF"
+        android:weightSum="3"
+        android:elevation="8dp">
+
+        <LinearLayout
+            android:id="@+id/nav_record_container"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="@drawable/nav_item_background"
+            android:onClick="onClick">
+
+            <ImageButton
+                android:id="@+id/nav_record"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:src="@drawable/record" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/nav_community_container"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="@drawable/nav_item_background"
+            android:onClick="onClick">
+
+            <ImageButton
+                android:id="@+id/nav_community"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:src="@drawable/society" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/nav_mine_container"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="@drawable/nav_item_background"
+            android:onClick="onClick">
+
+            <ImageButton
+                android:id="@+id/nav_mine"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:src="@drawable/profile" />
+        </LinearLayout>
+    </LinearLayout>
 </RelativeLayout>

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/record_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/grey">
+
+    <!-- 顶部标题栏（包含标题+搜索按钮） -->
+    <RelativeLayout
+        android:id="@+id/record_top_bar"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@android:color/white"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+        android:elevation="4dp">
+
+        <TextView
+            android:id="@+id/record_title"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="学习记录"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:gravity="center_vertical"
+            android:textColor="@android:color/black" />
+
+        <ImageView
+            android:id="@+id/main_iv_search"
+            android:layout_width="40dp"
+            android:layout_height="match_parent"
+            android:src="@mipmap/search"
+            android:layout_alignParentRight="true"
+            android:onClick="onClick"
+            />
+    </RelativeLayout>
+
+    <!-- 记录列表 -->
+    <ListView
+        android:id="@+id/record_list_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/record_top_bar"
+        android:divider="@null"
+        android:dividerHeight="8dp"
+        android:padding="12dp"
+        android:layout_marginBottom="80dp"
+        android:background="@color/grey" />
+</RelativeLayout>
