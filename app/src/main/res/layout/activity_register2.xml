@@ -94,13 +94,7 @@
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 
-        <TextView
-            android:layout_marginTop="10dp"
-            android:layout_gravity="right"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/blue"
-            android:text="还未注册?"/>
+
 
         <Button
             android:id="@+id/make_register"

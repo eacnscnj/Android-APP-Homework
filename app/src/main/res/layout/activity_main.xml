@@ -48,98 +48,48 @@
 
     <RelativeLayout
         android:id="@+id/radial_menu_container"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:clipChildren="false"
-        android:clipToPadding="false">
+        android:layout_width="match_parent"  android:layout_height="match_parent" android:clipChildren="false"         android:clipToPadding="false">       <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/main_btn_edit"
+        android:onClick="onClick"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:background="@drawable/main_recordbtn_bg"
+        android:text="@string/edit_one"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:visibility="gone"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="8dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:elevation="8dp"   />
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/main_btn_edit"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentBottom="true"
-            android:layout_margin="20dp"
-            android:background="@drawable/main_recordbtn_bg"
-            android:onClick="onClick"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
-            android:text="@string/edit_one"
-            android:textStyle="bold"
-            android:visibility="gone"
-            android:elevation="8dp"
-            android:gravity="center" />
-
-        <!-- ↓ 修改：把 main_btn_more 从 alignParentBottom 改为 layout_above="@id/bottom_nav" ↓ -->
         <ImageButton
             android:id="@+id/main_btn_more"
             android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_alignParentRight="true"
-            android:layout_above="@id/bottom_nav"
-            android:layout_marginRight="20dp"
-            android:layout_marginBottom="20dp"
             android:onClick="onClick"
-            android:scaleType="fitCenter"
+            android:layout_height="50dp"
             android:src="@mipmap/more"
-            android:background="@drawable/main_morebtn_bg" />
+            android:scaleType="fitCenter"
+            android:background="@drawable/main_morebtn_bg"
+            android:layout_alignParentRight="true"  android:layout_alignParentBottom="true" android:layout_margin="20dp"           />
 
-
+    </RelativeLayout>
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/main_btn_statistics"
         android:onClick="onClick"
-        android:layout_width="wrap_content"
-        android:layout_height="50dp"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
         android:background="@drawable/main_recordbtn_bg" android:text="@string/statistics"
         android:textStyle="bold"
         android:gravity="center"
         android:visibility="gone"
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
-        android:layout_margin="20dp"
+        android:layout_margin="8dp"
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
         android:elevation="8dp"
         />
-
-        <LinearLayout
-            android:id="@+id/bottom_nav"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:layout_alignParentBottom="true"
-            android:orientation="horizontal"
-            android:background="@android:color/white"
-            android:weightSum="3">
-
-            <ImageButton
-                android:id="@+id/nav_btn_check"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="?attr/selectableItemBackground"
-                android:onClick="onClick"
-                android:scaleType="centerInside"
-                android:src="@drawable/record" />
-
-            <ImageButton
-                android:id="@+id/nav_btn_calendar"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="?attr/selectableItemBackground"
-                android:onClick="onClick"
-                android:scaleType="centerInside"
-                android:src="@drawable/society" />
-
-            <ImageButton
-                android:id="@+id/nav_btn_settings"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="?attr/selectableItemBackground"
-                android:onClick="onClick"
-                android:scaleType="centerInside"
-                android:src="@drawable/profile" />
-        </LinearLayout>
-    </RelativeLayout>
 </RelativeLayout>
