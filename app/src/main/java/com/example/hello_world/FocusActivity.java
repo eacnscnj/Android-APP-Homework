@@ -77,12 +77,12 @@ public class FocusActivity extends AppCompatActivity {
             startLockTask(); // 启动屏幕固定
             Toast.makeText(this, "已进入专注强制模式，无法切换应用或退出！", Toast.LENGTH_LONG).show();
             // 您还可以进一步调整其他UI元素，比如改变颜色或显示锁定图标
-            timerTextView.setTextColor(getResources().getColor(android.R.color.holo_red_light)); // 例如，强制模式下文字变红
+            //timerTextView.setTextColor(getResources().getColor(android.R.color.holo_red_light)); // 例如，强制模式下文字变红
         } else {
             // 休闲模式下的 UI 默认状态，确保可见
             pauseButton.setVisibility(View.VISIBLE);
             exitButton.setText("结束");
-            timerTextView.setTextColor(getResources().getColor(android.R.color.holo_purple)); // 恢复默认白色
+            //timerTextView.setTextColor(getResources().getColor(android.R.color.holo_purple)); // 恢复默认白色
         }
 
         // 显示项目名称 (现在 projectNameTextView 已经不为 null 了)
