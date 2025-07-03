@@ -158,18 +158,41 @@ public class FocusActivity extends AppCompatActivity {
             public void onFinish() {
                 timerTextView.setText("00:00");
                 timeLeft = 0;
-                // 5. 在 CountDownTimer 的 onFinish() 方法中，如果之前启用了屏幕固定，则调用 stopLockTask() 解除锁定。
                 if ("strict".equals(focusMode)) {
                     stopLockTask(); // 强制模式倒计时结束，解除屏幕固定
                 }
 
-                // 专注完成提示
-                new AlertDialog.Builder(FocusActivity.this)
-                        .setTitle("专注结束")
-                        .setMessage("恭喜！您已完成一次专注")
-                        .setPositiveButton("好的", (dialog, which) -> finishAndReturnToMain())
-                        .setCancelable(false) // 强制用户点击“好的”
-                        .show();
+                // --- 替换为自定义布局的 AlertDialog ---
+                AlertDialog.Builder customDialogBuilder = new AlertDialog.Builder(FocusActivity.this);
+                View customLayout = getLayoutInflater().inflate(R.layout.dialog_focus_completed, null);
+                customDialogBuilder.setView(customLayout);
+
+                // 获取自定义布局中的UI元素
+                TextView dialogTitle = customLayout.findViewById(R.id.dialogTitle);
+                TextView dialogMessage = customLayout.findViewById(R.id.dialogMessage);
+                Button dialogPositiveButton = customLayout.findViewById(R.id.dialogPositiveButton);
+
+                // 设置标题和消息内容（您可以根据需要动态设置，比如显示专注了多少分钟）
+                dialogTitle.setText("专注已完成！");
+                dialogMessage.setText("恭喜！您成功完成了 " + (initialFocusDuration / (1000 * 60)) + " 分钟的专注学习！");
+
+                final AlertDialog dialog = customDialogBuilder.create();
+                dialog.setCancelable(false); // 仍然不可取消
+                dialog.setCanceledOnTouchOutside(false); // 不可通过点击外部取消
+
+                // 设置按钮点击事件
+                dialogPositiveButton.setOnClickListener(v -> {
+                    dialog.dismiss(); // 关闭弹窗
+                    finishAndReturnToMain(); // 返回主界面
+                });
+
+                // 设置弹窗的窗口背景透明，以便自定义布局的圆角背景能显示出来
+                if (dialog.getWindow() != null) {
+                    dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+                }
+
+                dialog.show();
+                // --- 自定义布局的 AlertDialog 结束 ---
             }
         }.start();
     }
@@ -202,13 +225,45 @@ public class FocusActivity extends AppCompatActivity {
     }
 
     private void showExitDialog() {
-        new AlertDialog.Builder(this)
-                .setTitle("确认结束专注?")
-                .setMessage("您确定要提前结束本次专注吗？")
-                .setPositiveButton("确认", (dialog, which) -> finishAndReturnToMain())
-                .setNegativeButton("取消", null)
-                .setCancelable(true)
-                .show();
+        // --- 替换为自定义布局的 AlertDialog ---
+        AlertDialog.Builder customDialogBuilder = new AlertDialog.Builder(this);
+        View customLayout = getLayoutInflater().inflate(R.layout.dialog_exit_confirmation, null);
+        customDialogBuilder.setView(customLayout);
+
+        // 获取自定义布局中的UI元素
+        TextView dialogTitle = customLayout.findViewById(R.id.dialogTitle);
+        TextView dialogMessage = customLayout.findViewById(R.id.dialogMessage);
+        Button dialogPositiveButton = customLayout.findViewById(R.id.dialogPositiveButton);
+        Button dialogNegativeButton = customLayout.findViewById(R.id.dialogNegativeButton);
+
+        // 设置标题和消息内容
+        dialogTitle.setText("确认结束专注？");
+        dialogMessage.setText("确定要提前结束本次专注吗？");
+
+        final AlertDialog dialog = customDialogBuilder.create();
+        dialog.setCancelable(true); // 允许通过返回键取消
+        dialog.setCanceledOnTouchOutside(true); // 允许点击外部取消
+
+        // 设置按钮点击事件
+        dialogPositiveButton.setOnClickListener(v -> {
+            dialog.dismiss(); // 关闭弹窗
+            if (countDownTimer != null) {
+                countDownTimer.cancel(); // 取消计时器
+            }
+            finishAndReturnToMain(); // 返回主界面
+        });
+
+        dialogNegativeButton.setOnClickListener(v -> {
+            dialog.dismiss(); // 点击取消时关闭弹窗
+        });
+
+        // 设置弹窗的窗口背景透明
+        if (dialog.getWindow() != null) {
+            dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        }
+
+        dialog.show();
+        // --- 自定义布局的 AlertDialog 结束 ---
     }
 
     private void finishAndReturnToMain() {
