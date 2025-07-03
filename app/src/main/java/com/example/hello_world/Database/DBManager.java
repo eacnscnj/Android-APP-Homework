@@ -407,4 +407,66 @@ public class DBManager {
         }
         return null;
     }
+
+    // **新增方法：获取所有普通用户 (register_type = 0)**
+    @SuppressLint("Range")
+    public static List<UserInfo> getAllRegularUsers() {
+        List<UserInfo> userList = new ArrayList<>();
+        Cursor cursor = null;
+        try {
+            // 查询 register_type 为 0 的用户
+            cursor = db.query(
+                    "user_table",
+                    new String[]{"id", "username", "password", "register_type"},
+                    "register_type = ?",
+                    new String[]{String.valueOf(0)}, // 0 代表普通用户
+                    null, null, null
+            );
+
+            while (cursor != null && cursor.moveToNext()) {
+                UserInfo userInfo = new UserInfo(
+                        cursor.getInt(cursor.getColumnIndexOrThrow("id")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("username")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("password")),
+                        cursor.getInt(cursor.getColumnIndexOrThrow("register_type"))
+                );
+                userList.add(userInfo);
+            }
+        } catch (Exception e) {
+            Log.e("DBManager", "Error getting all regular users: " + e.getMessage(), e);
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+        return userList;
+    }
+
+    // **新增方法：删除用户及其所有学习记录**
+    public static boolean deleteUserAndTheirRecords(int userIdToDelete) {
+        try {
+            db.beginTransaction(); // 开始事务
+
+            // 1. 删除该用户在 studyTimeTable 中的所有记录
+            int recordsDeleted = db.delete("studyTimeTable", "userId=?", new String[]{String.valueOf(userIdToDelete)});
+            Log.d("DBManager", "Deleted " + recordsDeleted + " study records for user ID: " + userIdToDelete);
+
+            // 2. 删除 user_table 中的用户记录
+            int userDeleted = db.delete("user_table", "id=?", new String[]{String.valueOf(userIdToDelete)});
+            Log.d("DBManager", "Deleted " + userDeleted + " user record for user ID: " + userIdToDelete);
+
+            if (userDeleted > 0) {
+                db.setTransactionSuccessful(); // 事务成功
+                return true;
+            } else {
+                Log.w("DBManager", "No user record found for deletion with ID: " + userIdToDelete);
+                return false;
+            }
+        } catch (Exception e) {
+            Log.e("DBManager", "Error deleting user and records for ID " + userIdToDelete + ": " + e.getMessage(), e);
+            return false;
+        } finally {
+            db.endTransaction(); // 结束事务
+        }
+    }
 }

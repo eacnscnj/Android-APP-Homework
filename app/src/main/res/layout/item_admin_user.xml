@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="12dp"
+    android:background="@drawable/rounded_white_background"
+    android:layout_marginTop="4dp"
+    android:layout_marginBottom="4dp"
+    android:layout_marginLeft="8dp"
+    android:layout_marginRight="8dp">
+
+    <!-- 用户名 -->
+    <TextView
+        android:id="@+id/item_admin_user_username"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:text="用户名"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <!-- 学习总时长 -->
+    <TextView
+        android:id="@+id/item_admin_user_study_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/item_admin_user_username"
+        android:layout_marginLeft="16dp"
+        android:layout_centerVertical="true"
+        android:text="0 h 0 min"
+        android:textColor="@color/more_grey"
+        android:textSize="16sp" />
+
+    <!-- 删除按钮 -->
+    <ImageView
+        android:id="@+id/item_admin_user_delete_btn"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:src="@drawable/delete_icon"
+        android:clickable="true"
+        android:focusable="true"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="删除用户" />
+
+</RelativeLayout>
