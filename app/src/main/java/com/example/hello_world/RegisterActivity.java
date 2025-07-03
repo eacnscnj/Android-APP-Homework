@@ -46,8 +46,8 @@ public class RegisterActivity extends AppCompatActivity {
                 UserInfo newUser=new UserInfo();
                 String username=et_username.getText().toString();
                 String password=et_password.getText().toString();
-                newUser.getUsername(username);
-                newUser.getPassword(password);
+                newUser.setUsername(username);
+                newUser.setPassword(password);
 
 
                 if(TextUtils.isEmpty(username)||TextUtils.isEmpty(password)){
