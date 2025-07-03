@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
@@ -38,6 +39,11 @@ public class MainActivity extends AppCompatActivity implements AccountAdapter.On
     private int radius = 400;
 
     private int currentUserId; // **新增：存储当前用户ID**
+
+    //用于切换底栏选中与跳转
+    private LinearLayout navRecordContainer, navCommunityContainer, navMineContainer;
+    private LinearLayout currentSelectedContainer;
+
 
     private void initTime() {
         Calendar calendar = Calendar.getInstance();
@@ -92,7 +98,29 @@ public class MainActivity extends AppCompatActivity implements AccountAdapter.On
         moreButton = findViewById(R.id.main_btn_more);
 
         loadDBData();
+
+
+
+
+        navRecordContainer = findViewById(R.id.nav_record_container);
+        navCommunityContainer = findViewById(R.id.nav_community_container);
+        navMineContainer = findViewById(R.id.nav_mine_container);
+
+// 默认选中第一个
+        currentSelectedContainer = navRecordContainer;
+        currentSelectedContainer.setSelected(true);
+
     }
+
+    //设置底栏按钮状态
+    private void selectNavContainer(LinearLayout selected) {
+        if (currentSelectedContainer != null) {
+            currentSelectedContainer.setSelected(false);
+        }
+        selected.setSelected(true);
+        currentSelectedContainer = selected;
+    }
+
 
     @Override
     protected void onResume() {
@@ -147,6 +175,20 @@ public class MainActivity extends AppCompatActivity implements AccountAdapter.On
                 Log.d(TAG, "More button clicked. Toggling radial menu.");
                 toggleRadialMenu();
                 break;
+                //底栏选中
+            case R.id.nav_record_container:
+                selectNavContainer(navRecordContainer);
+                // 跳转或切换界面
+                break;
+
+            case R.id.nav_community_container:
+                selectNavContainer(navCommunityContainer);
+                break;
+
+            case R.id.nav_mine_container:
+                selectNavContainer(navMineContainer);
+                break;
+
         }
     }
 
@@ -228,4 +270,5 @@ public class MainActivity extends AppCompatActivity implements AccountAdapter.On
         });
         animatorSet.start();
     }
+
 }
