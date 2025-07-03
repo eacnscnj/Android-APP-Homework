@@ -45,6 +45,7 @@ public abstract class BaseFragment extends Fragment {
     GridView typeGrid;
     List<TypeIn>typeInList;
     AccountIn accountIn;//输入的数据
+    protected int currentUserId; // **新增：存储当前用户ID**
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -52,6 +53,22 @@ public abstract class BaseFragment extends Fragment {
         accountIn = new AccountIn();
         accountIn.setTypename("其他");
         accountIn.setFocusImageID(R.mipmap.more_fs);
+
+        // **从 Arguments 中获取用户 ID**
+        if (getArguments() != null) {
+            currentUserId = getArguments().getInt("USER_ID", -1);
+            if (currentUserId == -1) {
+                Log.e("BaseFragment", "Error: User ID not found in arguments.");
+                // 考虑处理未获取到用户ID的情况，例如显示错误信息或返回
+            } else {
+                Log.d("BaseFragment", "Fragment initialized for user ID: " + currentUserId);
+            }
+        } else {
+            Log.e("BaseFragment", "Error: No arguments passed to fragment.");
+            currentUserId = DBManager.getCurrentUserId(); // 备用：尝试从 DBManager 获取
+            Log.e("BaseFragment", "Attempted to retrieve user ID from DBManager: " + currentUserId);
+        }
+        accountIn.setUserId(currentUserId); // **设置 accountIn 的 userId**
     }
 
     @Override
@@ -103,7 +120,8 @@ public abstract class BaseFragment extends Fragment {
     }
 
     public void loadDataToGrid(){
-
+        // 此处不再直接调用 DBManager.getTypeList(kind)，而是由子类实现
+        // 因为 getTypeList 不需要 userId 过滤
     }
 
     private void initView(View view){
@@ -126,12 +144,25 @@ public abstract class BaseFragment extends Fragment {
     public void triggerSaveAccount() {
         String inputText = studyEdit.getText().toString();
         if (TextUtils.isEmpty(inputText) || inputText.equals("0") || Float.parseFloat(inputText) <= 0) {
-            // 如果输入无效，给出提示但不保存
             Toast.makeText(getContext(), "请输入有效的学习时长！", Toast.LENGTH_SHORT).show();
-            return; // 不执行保存操作
+            return;
         }
         float studyTime = Float.parseFloat(inputText);
         accountIn.setStudyTime(studyTime);
+
+        // 添加备注信息
+        String note = noteText.getText().toString().trim();
+        if (!TextUtils.isEmpty(note) && !note.equals("添加备注...")) {
+            accountIn.setNote(note);
+        } else {
+            accountIn.setNote("");
+        }
+
+        // **再次确认 userId 已设置**
+        if (accountIn.getUserId() == 0 || accountIn.getUserId() == -1) { // 检查 userId 是否有效
+            accountIn.setUserId(DBManager.getCurrentUserId()); // 尝试从 DBManager 获取
+            Log.w("BaseFragment", "accountIn.userId was not set, retrieving from DBManager: " + accountIn.getUserId());
+        }
 
         Log.d("BaseFragmentDebug", "AccountIn data before saving:");
         Log.d("BaseFragmentDebug", "Type: " + accountIn.getTypename());
@@ -139,18 +170,11 @@ public abstract class BaseFragment extends Fragment {
         Log.d("BaseFragmentDebug", "Date: " + accountIn.getYear() + "-" + accountIn.getMounth() + "-" + accountIn.getDay());
         Log.d("BaseFragmentDebug", "Time String: " + accountIn.getTime());
         Log.d("BaseFragmentDebug", "Note: " + accountIn.getNote());
-
-        // 添加备注信息
-        String note = noteText.getText().toString().trim();
-        if (!TextUtils.isEmpty(note) && !note.equals("添加备注...")) { // 检查是否是默认提示文字
-            accountIn.setNote(note);
-        } else {
-            accountIn.setNote(""); // 清空备注或设置为null
-        }
+        Log.d("BaseFragmentDebug", "User ID: " + accountIn.getUserId()); // **打印 userId**
 
 
-        saveAccountToDB(); // 调用抽象方法保存到数据库
-        Toast.makeText(getContext(), "记录已保存！", Toast.LENGTH_SHORT).show(); // 保存成功提示
+        saveAccountToDB();
+        Toast.makeText(getContext(), "记录已保存！", Toast.LENGTH_SHORT).show();
     }
 
     public abstract void saveAccountToDB() ;
