@@ -22,7 +22,7 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <!-- 用户头像 -->
-    <ImageView
+    <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/iv_avatar"
         android:layout_width="100dp"
         android:layout_height="100dp"
@@ -30,14 +30,15 @@
         android:src="@drawable/me"
         android:contentDescription="用户头像"
         android:scaleType="centerCrop"
-        android:background="?attr/selectableItemBackgroundBorderless"
         android:clickable="true"
         android:focusable="true"
+        android:background="?attr/selectableItemBackgroundBorderless"
         android:padding="2dp"
-        android:backgroundTint="?attr/colorPrimary"
+        app:shapeAppearanceOverlay="@style/CircleImageView"
         app:layout_constraintTop_toBottomOf="@id/tv_title"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"/>
+
 
     <!-- 用户名 -->
     <TextView
