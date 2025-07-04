@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".FocusActivity"
+    android:background="@color/black_overlay"> <ImageView
+    android:id="@+id/backgroundImage"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:scaleType="centerCrop"
+    android:src="@drawable/focus_background_gradient"
+    android:alpha="0.5" /> <androidx.constraintlayout.widget.ConstraintLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="24dp">
+
+    <TextView
+        android:id="@+id/projectNameTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="64dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:text="专注项目：无标题专注"
+        android:textSize="24sp"
+        android:textColor="@android:color/white"
+        android:textStyle="bold"
+        android:gravity="center"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <TextView
+        android:id="@+id/poetryTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:textColor="@color/white" android:textSize="18sp"
+        android:textStyle="italic"
+        android:textAlignment="center"
+        android:lineSpacingExtra="8dp" android:paddingVertical="12dp"
+        android:paddingHorizontal="24dp"
+        android:background="@drawable/rounded_background_transparent" app:layout_constraintTop_toBottomOf="@id/projectNameTextView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintWidth_max="350dp" /> <TextView
+    android:id="@+id/timerTextView"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:textSize="80sp" android:textColor="@color/timer_color" android:textStyle="bold"
+    android:fontFamily="sans-serif-light" app:layout_constraintTop_toBottomOf="@id/poetryTextView"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintBottom_toTopOf="@id/controlButtonsLayout"
+    app:layout_constraintVertical_bias="0.5" /> <LinearLayout
+    android:id="@+id/controlButtonsLayout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center"
+    android:layout_marginBottom="48dp"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintEnd_toEndOf="parent">
+
+    <Button
+        android:id="@+id/screenOnButton"
+        style="@style/Widget.AppCompat.Button.Borderless" android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="常亮：开"
+        android:textSize="16sp"
+        android:textColor="@color/white"
+        android:background="@drawable/button_background_blue"
+        android:paddingVertical="12dp"
+        android:layout_marginEnd="8dp"/>
+
+    <Button
+        android:id="@+id/pauseButton"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="暂停"
+        android:textSize="16sp"
+        android:textColor="@color/white"
+        android:background="@drawable/button_background_green"
+        android:paddingVertical="12dp"
+        android:layout_marginEnd="8dp"/>
+
+    <Button
+        android:id="@+id/exitButton"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="结束"
+        android:textSize="16sp"
+        android:textColor="@color/dark_gray" android:background="@drawable/button_background_white"
+        android:paddingVertical="12dp"/>
+</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
