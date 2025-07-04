@@ -16,6 +16,13 @@ import android.view.View; // 导入 View
 import android.app.ActivityManager; // 导入 ActivityManager
 import android.content.Context;     // 导入 Context
 import android.widget.Toast;
+import com.example.hello_world.Database.AccountIn;
+import com.example.hello_world.Database.DBManager;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 public class FocusActivity extends AppCompatActivity {
 
@@ -35,6 +42,9 @@ public class FocusActivity extends AppCompatActivity {
     private String focusMode; // 存储选定的模式 ("strict" 或 "casual")
     private String projectName; // 新增：存储项目名称
     private long initialFocusDuration; // 新增：存储初始专注时长（毫秒）
+    private int selectedKind;
+    private int selectedFocusImageId; // 新增：用于存储选定 TypeIn 的 focusImageID
+
     // 诗句库
     private final String[] POETRY = {
             "一寸光阴一寸金，寸金难买寸光阴。",
@@ -58,6 +68,8 @@ public class FocusActivity extends AppCompatActivity {
             focusMode = intent.getStringExtra("focus_mode");
             projectName = intent.getStringExtra("project_name"); // 从 Intent 获取项目名称
             initialFocusDuration = intent.getLongExtra("focus_duration_ms", 0); // 从 Intent 获取专注时长
+            selectedKind  = intent.getIntExtra("selected_kind",-1);
+            selectedFocusImageId = intent.getIntExtra("selected_focus_image_id", 0); // <-- 接收 focusImageID
         } else {
             focusMode = "casual";
             projectName = "无标题专注"; // 提供默认值
@@ -191,6 +203,9 @@ public class FocusActivity extends AppCompatActivity {
                 }
                 // --- 震动提醒优化结束 ---
 
+                // == 新增：专注完成时保存数据到数据库 ==
+                saveFocusRecord(true); // 传入 true 表示专注成功完成
+
                 // --- 替换为自定义布局的 AlertDialog ---
                 AlertDialog.Builder customDialogBuilder = new AlertDialog.Builder(FocusActivity.this);
                 View customLayout = getLayoutInflater().inflate(R.layout.dialog_focus_completed, null);
@@ -279,6 +294,8 @@ public class FocusActivity extends AppCompatActivity {
             if (countDownTimer != null) {
                 countDownTimer.cancel(); // 取消计时器
             }
+            // == 新增：提前结束时保存数据到数据库 ==
+            saveFocusRecord(false); // 传入 false 表示专注未完成
             finishAndReturnToMain(); // 返回主界面
         });
 
@@ -346,5 +363,72 @@ public class FocusActivity extends AppCompatActivity {
             }
         }
         return false;
+    }
+    /**
+     * 保存专注记录到数据库
+     * @param completed true 表示专注成功完成，false 表示提前结束
+     */
+    private void saveFocusRecord(boolean completed) {
+        // 获取当前时间信息
+        long currentMillis = System.currentTimeMillis(); // 获取当前毫秒时间戳
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(currentMillis);
+
+        int year = calendar.get(Calendar.YEAR);
+        // 注意：这里的 'mounth' 拼写是为了与您原始的 AccountIn 类保持一致。
+        int mounth = calendar.get(Calendar.MONTH) + 1; // Calendar 月份从0开始，所以要加1
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+        // 将当前时间格式化为字符串，以适应原始 AccountIn 类的 'time' 字段
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日 HH:mm", Locale.getDefault());
+        String formattedTime = sdf.format(new Date(currentMillis));
+
+        // 计算实际专注时长（分钟）
+        // 如果是成功完成，则是 initialFocusDuration；如果是提前结束，则是 initialFocusDuration 减去 timeLeft。
+        float actualStudyTime = (float) (completed ? initialFocusDuration : (initialFocusDuration - timeLeft)) / (1000 * 60);
+
+        // 获取当前登录用户ID
+        // 我们现在直接调用 DBManager 的静态方法来获取用户ID。
+        int currentUserId = DBManager.getCurrentUserId();
+
+        // 如果 currentUserId 为 -1，表示用户未登录或ID无效，请进行适当处理
+        // (例如：显示提示信息，或跳转到登录界面)。
+        if (currentUserId == -1) {
+            Toast.makeText(this, "用户未登录，无法保存专注记录。", Toast.LENGTH_LONG).show();
+            // 如果需要，可以在这里添加跳转到登录页面的代码，例如：
+            // Intent loginIntent = new Intent(this, LoginActivity.class);
+            // startActivity(loginIntent);
+            // finish();
+            return;
+        }
+
+        // 创建 AccountIn 对象
+        AccountIn accountIn = new AccountIn();
+        accountIn.setTypename(projectName != null ? projectName : "无标题专注"); // 使用项目名称或默认值
+        // focusImageID 需要设置。假设 'R.drawable.ic_focus' 是一个默认图标。
+        // 您可能需要根据 projectName 或选定的 TypeIn 动态获取此ID。
+        accountIn.setFocusImageID(selectedFocusImageId);
+
+        String note = completed ? "专注会话成功完成。" : "专注会话提前结束。";
+        accountIn.setNote(note);
+        accountIn.setStudyTime(actualStudyTime); // 保存实际专注时长
+        accountIn.setTime(formattedTime);       // 保存格式化后的时间字符串
+        accountIn.setYear(year);
+        accountIn.setMounth(mounth);            // 沿用原始 AccountIn 类中的 'mounth' 拼写
+        accountIn.setDay(day);
+        accountIn.setKind(selectedKind); // 假设 '1' 表示 '专业课'
+        accountIn.setUserId(currentUserId);
+
+        // 使用 DBManager 保存数据。
+        // 由于 DBManager 的方法是静态的，您不需要先获取它的实例。
+        // 确保 DBManager.initDB(Context) 已在您的应用程序启动时调用过一次。
+        DBManager.insertItemToTable(accountIn);
+
+        // DBManager.insertItemToTable 方法内部已经包含了日志记录和可能的 Toast 提示。
+        // 之前的 'if (rowId != -1)' 判断现在可以在 DBManager 内部处理。
+        // 因此，您可以移除这里的额外检查。不过，如果您的 UI 需要明确的成功/失败反馈，
+        // 您可以修改 DBManager.insertItemToTable 让它返回 rowId，然后在这里进行判断。
+        // 为了简化，这里保留一个成功的 Toast 提示。
+        Toast.makeText(this, "专注记录已保存！", Toast.LENGTH_SHORT).show();
     }
 }

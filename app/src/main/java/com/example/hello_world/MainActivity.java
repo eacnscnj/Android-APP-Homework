@@ -68,8 +68,6 @@ public class MainActivity extends AppCompatActivity /* implements AccountAdapter
     ListView todayLv;
     List<AccountIn>mDatas;
     AccountAdapter adapter;
-    int year,month,day;
-    private final int[] FOCUS_DURATIONS_MINUTES = {5, 10, 15, 20, 25, 30, 45, 60};
 
     private void initTime() {
         // 这里如果不用时间可删，否则保留
@@ -262,7 +260,7 @@ public class MainActivity extends AppCompatActivity /* implements AccountAdapter
     }
 
     private void animateMenuOpen(View view, int index) {
-        double startAngleDegrees = -160;
+        double startAngleDegrees = -175;
         double angleIncrement = 40;
         double currentAngleDegrees = startAngleDegrees + (index * angleIncrement);
         double angleRad = Math.toRadians(currentAngleDegrees);
@@ -285,7 +283,7 @@ public class MainActivity extends AppCompatActivity /* implements AccountAdapter
     }
 
     private void animateMenuClose(View view, int index) {
-        double startAngleDegrees = -160;
+        double startAngleDegrees = -175;
         double angleIncrement = 40;
         double currentAngleDegrees = startAngleDegrees + (index * angleIncrement);
         double angleRad = Math.toRadians(currentAngleDegrees);
@@ -424,6 +422,7 @@ public class MainActivity extends AppCompatActivity /* implements AccountAdapter
                 int selectedMajorPos = spinnerMajorCourse.getSelectedItemPosition();
                 int selectedGeneralPos = spinnerGeneralCourse.getSelectedItemPosition();
 
+
                 if (selectedMajorPos > 0) {
                     projectName = majorCourseNames.get(selectedMajorPos);
                 } else if (selectedGeneralPos > 0) {
@@ -460,11 +459,37 @@ public class MainActivity extends AppCompatActivity /* implements AccountAdapter
                     focusMode = "casual";
                 }
 
+                int selectedKind;
+                int selectedTypeId = -1; // 新增：用于存储选定 TypeIn 的数据库ID
+                int selectedFocusImageId = 0; // 新增：用于存储选定 TypeIn 的 focusImageID
+                if (selectedMajorPos > 0) {
+                    // 用户选择了专业课
+                    // 从 majorCourseTypeList 中获取对应的 TypeIn 对象
+                    // 因为 majorCourseNames 包含了提示项，所以实际数据索引需要减1
+                    TypeIn selectedType = majorCourseTypeList.get(selectedMajorPos - 1);
+                    projectName = selectedType.getTypename();
+                    selectedKind = selectedType.getKind(); // 从 TypeIn 对象获取 kind
+                    selectedTypeId = selectedType.getId(); // 获取数据库ID
+                    selectedFocusImageId = selectedType.getFocusImageID(); // 获取 focusImageID
+                } else if (selectedGeneralPos > 0) {
+                    // 用户选择了通识课
+                    // 从 generalCourseTypeList 中获取对应的 TypeIn 对象
+                    TypeIn selectedType = generalCourseTypeList.get(selectedGeneralPos - 1);
+                    projectName = selectedType.getTypename();
+                    selectedKind = selectedType.getKind(); // 从 TypeIn 对象获取 kind
+                    selectedTypeId = selectedType.getId(); // 获取数据库ID
+                    selectedFocusImageId = selectedType.getFocusImageID(); // 获取 focusImageID
+                } else {
+                    Toast.makeText(MainActivity.this, "请选择一个专注类别！", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 // 如果所有验证都通过，则启动 Activity 并关闭对话框
                 Intent intent = new Intent(MainActivity.this, FocusActivity.class);
                 intent.putExtra("focus_mode", focusMode);
                 intent.putExtra("project_name", projectName);
                 intent.putExtra("focus_duration_ms", focusDurationMs);
+                intent.putExtra("selected_kind",selectedKind);
+                intent.putExtra("selected_focus_image_id", selectedFocusImageId); // <-- 传递 focusImageID
                 startActivity(intent);
 
                 dialog.dismiss(); // 验证成功后手动关闭对话框
