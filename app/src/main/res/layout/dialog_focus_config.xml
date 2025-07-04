@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:background="@drawable/dialog_background"> <TextView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="选择专注项目"
+    android:textSize="18sp"
+    android:textStyle="bold"
+    android:textColor="@color/dialog_text_dark"
+    android:layout_marginBottom="16dp"
+    android:gravity="center_horizontal" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="16dp">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_marginEnd="8dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="专业课"
+                android:textSize="14sp"
+                android:textColor="@color/dialog_text_medium" />
+
+            <Spinner
+                android:id="@+id/spinnerMajorCourse"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="48dp"
+                android:background="@drawable/spinner_background"
+                android:overlapAnchor="false"
+                android:spinnerMode="dropdown" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_marginStart="8dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="通识课"
+                android:textSize="14sp"
+                android:textColor="@color/dialog_text_medium" />
+
+            <Spinner
+                android:id="@+id/spinnerGeneralCourse"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="48dp"
+                android:background="@drawable/spinner_background"
+                android:overlapAnchor="false"
+                android:spinnerMode="dropdown" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="专注时长 (分钟)"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:textColor="@color/dialog_text_dark"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="8dp" />
+
+    <EditText
+        android:id="@+id/editTextFocusDuration"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="例如：25"
+        android:inputType="number" android:maxLines="1"
+        android:maxLength="3"
+        android:padding="12dp"
+        android:background="@drawable/edittext_background"
+        android:textColor="@color/dialog_text_dark"
+        android:textColorHint="@color/dialog_text_hint"
+        android:autofillHints="" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="选择专注模式"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:textColor="@color/dialog_text_dark"
+        android:layout_marginTop="24dp"
+        android:layout_marginBottom="8dp" />
+
+    <RadioGroup
+        android:id="@+id/radioGroupFocusMode"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_horizontal">
+
+        <RadioButton
+            android:id="@+id/radioCasualMode"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="休闲模式"
+            android:textColor="@color/dialog_text_dark"
+            android:buttonTint="@color/blue" android:checked="true" />
+
+        <RadioButton
+            android:id="@+id/radioStrictMode"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="强制模式"
+            android:textColor="@color/dialog_text_dark"
+            android:buttonTint="@color/blue" />
+    </RadioGroup>
+
+</LinearLayout>

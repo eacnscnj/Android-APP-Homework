@@ -1,5 +1,6 @@
 package com.example.hello_world;
 
+
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.app.AlertDialog;
@@ -18,20 +19,25 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
+import android.widget.ListView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.hello_world.Database.AccountIn;
 import com.example.hello_world.Database.DBManager;
 import com.example.hello_world.Database.TypeIn;
 import com.example.hello_world.fragments.RecordFragment;
 import com.example.hello_world.fragments.CommunityFragment;
 import com.example.hello_world.fragments.MineFragment;
-
+import com.example.hello_world.adapter.AccountAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,6 +63,13 @@ public class MainActivity extends AppCompatActivity /* implements AccountAdapter
     private RecordFragment recordFragment;
     private CommunityFragment communityFragment;
     private MineFragment mineFragment;
+
+
+    ListView todayLv;
+    List<AccountIn>mDatas;
+    AccountAdapter adapter;
+    int year,month,day;
+    private final int[] FOCUS_DURATIONS_MINUTES = {5, 10, 15, 20, 25, 30, 45, 60};
 
     private void initTime() {
         // 这里如果不用时间可删，否则保留
@@ -217,8 +230,10 @@ public class MainActivity extends AppCompatActivity /* implements AccountAdapter
                 selectNavContainer(navMineContainer);
                 switchFragment(mineFragment);
                 break;
+
         }
     }
+
 
     // toggleRadialMenu 和动画相关代码保持不变
 
@@ -297,6 +312,7 @@ public class MainActivity extends AppCompatActivity /* implements AccountAdapter
         });
         animatorSet.start();
     }
+
     private void showIntegratedFocusConfigDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("配置专注");
@@ -347,7 +363,11 @@ public class MainActivity extends AppCompatActivity /* implements AccountAdapter
         );
         generalCourseAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerGeneralCourse.setAdapter(generalCourseAdapter);
+
         spinnerGeneralCourse.setSelection(0); // 默认选中提示项
+
+        spinnerGeneralCourse.setSelection(1); // 默认选中提示项
+
 
         // --- 3. 设置 Spinner 联动监听 (实现二选一逻辑) ---
         spinnerMajorCourse.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -392,8 +412,10 @@ public class MainActivity extends AppCompatActivity /* implements AccountAdapter
         final AlertDialog dialog = builder.create(); // 创建对话框实例
         dialog.show(); // 显示对话框
 
+
         // --- 关键改变：手动获取 PositiveButton 并设置监听器 ---
         Button positiveButton = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
+
         positiveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -457,4 +479,6 @@ public class MainActivity extends AppCompatActivity /* implements AccountAdapter
             }
         });
     }
+
 }
+

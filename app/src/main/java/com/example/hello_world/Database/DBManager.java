@@ -67,6 +67,7 @@ public class DBManager {
     // 记录表插入数据
     public static void insertItemToTable(AccountIn accountIn) {
         ContentValues values = new ContentValues();
+
         values.put("typename", accountIn.getTypename());
         values.put("focusImageID", accountIn.getFocusImageID());
         values.put("note", accountIn.getNote());
@@ -89,6 +90,7 @@ public class DBManager {
         } catch (Exception e) {
             Log.e("DBManager", "Error inserting into studyTimeTable: " + e.getMessage(), e);
         }
+
     }
 
     @SuppressLint("Range")

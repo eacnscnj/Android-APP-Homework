@@ -48,6 +48,7 @@ public class LoginActivity extends AppCompatActivity {
 
                 if (TextUtils.isEmpty(username) || TextUtils.isEmpty(password)) {
                     Toast.makeText(LoginActivity.this, "请输入用户名或密码", Toast.LENGTH_SHORT).show();
+
                 } else {
                     UserInfo userInfo = DBManager.query_User_From_usertable(username, password);
 
@@ -73,6 +74,7 @@ public class LoginActivity extends AppCompatActivity {
                         }
                         finish();
                     }
+
                 }
             }
         });

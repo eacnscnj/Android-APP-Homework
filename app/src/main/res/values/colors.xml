@@ -8,4 +8,20 @@
     <color name="green2">#6FBC6F</color>
     <color name="blue">#95CFE9</color>
     <color name="colorPrimary">#99CC00</color>
+    <color name="pink">#FF4081</color>
+    <color name="black_overlay">#66000000</color>
+    <color name="dark_gray">#333333</color>
+    <color name="light_gray_transparent">#33FFFFFF</color>
+    <color name="timer_color">#FFD700</color>
+    <color name="dialog_background_light">#FFFFFF</color>
+    <color name="dialog_text_dark">#333333</color>
+    <color name="dialog_text_medium">#666666</color>
+    <color name="dialog_text_hint">#999999</color>
+    <color name="dialog_border_light">#E0E0E0</color>
+    <color name="text_dark">#333333</color>
+    <color name="text_medium">#666666</color>
+    <color name="green_accent">#4CAF50</color>
+    <color name="orange_warning">#FF9800</color>
+    <color name="red_error">#F44336</color>
 </resources>
+
