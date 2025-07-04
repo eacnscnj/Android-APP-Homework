@@ -143,7 +143,7 @@ public class MainActivity extends AppCompatActivity {
         );
         generalCourseAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerGeneralCourse.setAdapter(generalCourseAdapter);
-        spinnerGeneralCourse.setSelection(0); // 默认选中提示项
+        spinnerGeneralCourse.setSelection(1); // 默认选中提示项
 
         // --- 3. 设置 Spinner 联动监听 (实现二选一逻辑) ---
         spinnerMajorCourse.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
