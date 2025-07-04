@@ -28,6 +28,9 @@
             android:name=".RecordActivity"
             android:exported="false" />
         <activity
+            android:name=".HelpActivity"
+            android:exported="false" />
+        <activity
             android:name=".SplashActivity"
             android:exported="true" >
             <intent-filter>

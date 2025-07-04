@@ -46,7 +46,16 @@ public class DBOpenHelper extends SQLiteOpenHelper {
         register_type integer
          */
         //创建login使用的 user_table表
-        String sql_Create_user_table="create table user_table(id integer primary key autoincrement,username varchar(12),password varchar(20),register_type integer)";
+        //String sql_Create_user_table="create table user_table(id integer primary key autoincrement,username varchar(12),password varchar(20),register_type integer)";
+        //用户表修改
+        String sql_Create_user_table = "create table user_table(" +
+                "id integer primary key autoincrement," +
+                "username varchar(12)," +
+                "password varchar(20)," +
+                "register_type integer," +
+                "nickname TEXT," +
+                "avatar_path TEXT)"; // 👈 新增字段
+
         sqLiteDatabase.execSQL(sql_Create_user_table);
         insertUserTable(sqLiteDatabase);
 

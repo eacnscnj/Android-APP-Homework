@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/help_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <!-- 返回按钮 -->
+    <ImageView
+        android:id="@+id/help_back_btn"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@drawable/back_arrow"
+        android:contentDescription="返回"
+        android:padding="8dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:onClick="onBackClick" />
+
+    <!-- 帮助标题 -->
+
+    <!-- 可展开的帮助列表 -->
+    <TextView
+        android:id="@+id/help_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/help_back_btn"
+        android:layout_marginStart="12dp"
+        android:layout_marginBottom="16dp"
+        android:layout_toEndOf="@id/help_back_btn"
+        android:text="使用帮助"
+        android:textSize="24sp"
+        android:textStyle="bold" />
+
+    <ExpandableListView
+        android:id="@+id/help_expandable_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/help_back_btn"
+        android:layout_marginTop="16dp"
+        android:divider="@android:color/darker_gray"
+        android:dividerHeight="1dp" />
+
+</RelativeLayout>

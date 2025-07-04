@@ -6,6 +6,9 @@ public class UserInfo {
     private String password;
     private int register_type;   //用户类型  0代表普通给用户 1代表超级用户
 
+    private String nickname;
+    private String avatar_path;
+
     public static  UserInfo sUserInfo;
 
     public UserInfo() {
@@ -20,11 +23,13 @@ public class UserInfo {
         sUserInfo = userInfo;
     }
 
-    public UserInfo(int _id, String username, String password, int register_type) {
+    public UserInfo(int _id, String username, String password, int register_type, String nickname, String avatar_path) {
         this._id = _id;
         this.username = username;
         this.password = password;
         this.register_type = register_type;
+        this.nickname = nickname;
+        this.avatar_path = avatar_path;
     }
 
     public int get_id() {
@@ -55,7 +60,19 @@ public class UserInfo {
         return register_type;
     }
 
+    public String getNickname() {
+        return nickname;
+    }
+
     public void setRegister_type(int register_type) {
         this.register_type = register_type;
+    }
+
+    public String getAvatar_path() {
+        return avatar_path;
+    }
+
+    public void setAvatarPath(String path) {
+        this.avatar_path = path;
     }
 }

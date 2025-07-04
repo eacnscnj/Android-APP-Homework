@@ -380,7 +380,7 @@ public class DBManager {
         try {
             cursor = db.query(
                     "user_table",
-                    new String[]{"id", "username", "password", "register_type"},
+                    new String[]{"id", "username", "password", "register_type", "nickname", "avatar_path"},
                     "username = ? AND password = ?",
                     new String[]{username, password},
                     null, null, null
@@ -391,14 +391,16 @@ public class DBManager {
                         cursor.getInt(cursor.getColumnIndexOrThrow("id")),
                         cursor.getString(cursor.getColumnIndexOrThrow("username")),
                         cursor.getString(cursor.getColumnIndexOrThrow("password")),
-                        cursor.getInt(cursor.getColumnIndexOrThrow("register_type"))
+                        cursor.getInt(cursor.getColumnIndexOrThrow("register_type")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("nickname")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("avatar_path"))
                 );
                 // **在用户成功登录时，设置当前用户ID**
                 setCurrentUserId(userInfo.get_id());
                 return userInfo;
             } else {
                 Log.d("Login", "密码错误，用户名: " + username);
-                return new UserInfo(-1, username, "", -1);
+                return new UserInfo(-1, username, "", -1, "", "");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -428,7 +430,9 @@ public class DBManager {
                         cursor.getInt(cursor.getColumnIndexOrThrow("id")),
                         cursor.getString(cursor.getColumnIndexOrThrow("username")),
                         cursor.getString(cursor.getColumnIndexOrThrow("password")),
-                        cursor.getInt(cursor.getColumnIndexOrThrow("register_type"))
+                        cursor.getInt(cursor.getColumnIndexOrThrow("register_type")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("nickname")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("avatar_path"))
                 );
                 userList.add(userInfo);
             }
@@ -469,4 +473,43 @@ public class DBManager {
             db.endTransaction(); // 结束事务
         }
     }
+
+    //昵称修改
+    // 更新用户昵称
+    public static void updateUserNickname(int userId, String newNickname) {
+        ContentValues values = new ContentValues();
+        values.put("nickname", newNickname);
+        db.update("user_table", values, "id = ?", new String[]{String.valueOf(userId)});
+    }
+
+
+    //获取用户信息
+    public static UserInfo getUserInfoById(int userId) {
+        Cursor cursor = null;
+        try {
+            cursor = db.query(
+                    "user_table",
+                    new String[]{"id", "username", "password", "register_type", "nickname", "avatar_path"},
+                    "id = ?",
+                    new String[]{String.valueOf(userId)},
+                    null, null, null
+            );
+
+            if (cursor != null && cursor.moveToFirst()) {
+                return new UserInfo(
+                        cursor.getInt(cursor.getColumnIndexOrThrow("id")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("username")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("password")),
+                        cursor.getInt(cursor.getColumnIndexOrThrow("register_type")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("nickname")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("avatar_path"))
+                );
+            }
+        } finally {
+            if (cursor != null) cursor.close();
+        }
+        return null;
+    }
+
+
 }
