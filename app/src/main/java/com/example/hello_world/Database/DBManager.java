@@ -7,6 +7,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import com.example.hello_world.R;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Calendar;
@@ -513,5 +515,59 @@ public class DBManager {
         return null;
     }
 
+    // **新增方法：插入新的学科类型到 typetb 表**
+    /**
+     * 插入新的学科类型到 typetb 表。
+     * 默认图标使用 R.mipmap.one_more 和 R.mipmap.more_fs。
+     *
+     * @param typename 新学科的名称。
+     * @param kind     学科的种类 (0 for 公共课, 1 for 专业课)。
+     * @return 插入成功返回 true，否则返回 false。
+     */
+    public static boolean insertNewType(String typename, int kind) {
+        // 首先检查该 kind 下是否已经存在同名类型
+        if (isTypeExists(typename, kind)) {
+            Log.d("DBManager", "Type '" + typename + "' already exists for kind " + kind + ". Aborting insertion.");
+            return false;
+        }
 
+        ContentValues values = new ContentValues();
+        values.put("typename", typename);
+        values.put("imageID", R.mipmap.cpu); // 使用默认图标
+        values.put("focusImageID", R.mipmap.cpu_fs); // 使用默认选中图标
+        values.put("kind", kind);
+
+        long result = -1;
+        try {
+            result = db.insert("typetb", null, values);
+            if (result == -1) {
+                Log.e("DBManager", "Failed to insert new type '" + typename + "' for kind " + kind);
+            } else {
+                Log.i("DBManager", "New type '" + typename + "' inserted successfully for kind " + kind + ", row ID: " + result);
+            }
+        } catch (Exception e) {
+            Log.e("DBManager", "Error inserting new type: " + e.getMessage(), e);
+        }
+        return result != -1;
+    }
+
+    // **新增方法：检查指定 kind 下是否存在同名类型**
+    @SuppressLint("Range")
+    private static boolean isTypeExists(String typename, int kind) {
+        Cursor cursor = null;
+        try {
+            cursor = db.query(
+                    "typetb",
+                    new String[]{"id"},
+                    "typename = ? AND kind = ?",
+                    new String[]{typename, String.valueOf(kind)},
+                    null, null, null
+            );
+            return cursor != null && cursor.getCount() > 0;
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+    }
 }
