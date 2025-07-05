@@ -25,4 +25,10 @@ public class PublicFragment extends BaseFragment {
         // userId 已经在 BaseFragment 的 onCreate 中设置到 accountIn
         DBManager.insertItemToTable(accountIn);
     }
+
+    // **实现抽象方法：返回公共课的 kind 值**
+    @Override
+    public int getFragmentKind() {
+        return 0; // 公共课对应 kind 0
+    }
 }

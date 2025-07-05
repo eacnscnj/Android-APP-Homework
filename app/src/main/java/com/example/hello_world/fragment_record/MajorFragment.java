@@ -25,4 +25,10 @@ public class MajorFragment extends BaseFragment {
         // userId 已经在 BaseFragment 的 onCreate 中设置到 accountIn
         DBManager.insertItemToTable(accountIn);
     }
+
+    // **实现抽象方法：返回专业课的 kind 值**
+    @Override
+    public int getFragmentKind() {
+        return 1; // 专业课对应 kind 1
+    }
 }
