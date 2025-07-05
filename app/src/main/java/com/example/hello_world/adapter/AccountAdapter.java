@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -92,9 +93,9 @@ public class AccountAdapter extends BaseAdapter {
         float studyMinutes = accountIn.getStudyTime();
         String displayTime;
         if (studyMinutes < 60) {
-            displayTime = String.format("%.0f", studyMinutes) + " min"; // 使用 %.0f 格式化，移除小数点
+            displayTime = String.format("%.0f", studyMinutes) + " min";
         } else {
-            float totalHours = studyMinutes / 60.0f; // 确保是浮点数除法
+            float totalHours = studyMinutes / 60.0f;
             displayTime = String.format("%.1fh", totalHours);
         }
         holder.studyTv.setText(displayTime);
@@ -106,7 +107,7 @@ public class AccountAdapter extends BaseAdapter {
             if (lastSpaceIndex != -1 && fullTimeStr.length() - lastSpaceIndex - 1 >= 5) {
                 startTime = fullTimeStr.substring(lastSpaceIndex + 1);
             } else {
-                startTime = fullTimeStr; // Fallback if format is not as expected
+                startTime = fullTimeStr;
             }
         }
         holder.tvStartTime.setText(startTime);
@@ -115,6 +116,12 @@ public class AccountAdapter extends BaseAdapter {
 
         holder.deleteBtn.setOnClickListener(v -> {
             showDeleteConfirmDialog(accountIn.getId(), accountIn.getTypename());
+        });
+
+        // 新增：设置长按监听，弹出分享输入弹窗
+        view.setOnLongClickListener(v -> {
+            showShareDialog(accountIn);
+            return true; // 消费事件，防止触发点击等其他事件
         });
 
         return view;
@@ -167,5 +174,63 @@ public class AccountAdapter extends BaseAdapter {
             tvStartTime = view.findViewById(R.id.item_mainlv_tv_startTime);
             deleteBtn = view.findViewById(R.id.item_mainlv_btn_delete);
         }
+    }
+
+
+    public interface OnItemSharedListener {
+        void onItemShared(); // 分享成功后的回调
+    }
+
+    private OnItemSharedListener shareListener;
+
+    public void setOnItemSharedListener(OnItemSharedListener listener) {
+        this.shareListener = listener;
+    }
+
+
+    //分享功能实现
+    private void showShareDialog(AccountIn accountIn) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle("发表分享");
+
+        //DBManager.initDB(context);
+        final EditText input = new EditText(context);
+        input.setHint("写点你的学习心得...");
+        input.setInputType(android.text.InputType.TYPE_CLASS_TEXT | android.text.InputType.TYPE_TEXT_FLAG_MULTI_LINE);
+        input.setMinLines(3);
+        input.setMaxLines(5);
+        input.setVerticalScrollBarEnabled(true);
+        input.setScrollBarStyle(View.SCROLLBARS_INSIDE_INSET);
+        int padding = (int) (16 * context.getResources().getDisplayMetrics().density);
+        input.setPadding(padding, padding, padding, padding);
+
+        builder.setView(input);
+
+        builder.setPositiveButton("确定", (dialog, which) -> {
+            String shareContent = input.getText().toString().trim();
+            if (!shareContent.isEmpty()) {
+                // 保存分享到数据库，示例调用DBManager（需你实现）
+                boolean success = DBManager.insertShareRecord(
+                        currentUserId,
+                        accountIn.getId(),
+                        shareContent
+                );
+
+                if (success) {
+                    Toast.makeText(context, "分享成功", Toast.LENGTH_SHORT).show();
+                    if (shareListener != null) {
+                        shareListener.onItemShared(); // 通知Fragment刷新
+                    }
+                } else {
+                    Toast.makeText(context, "分享失败，请稍后重试", Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                Toast.makeText(context, "分享内容不能为空", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        builder.setNegativeButton("取消", (dialog, which) -> dialog.dismiss());
+
+        builder.show();
     }
 }

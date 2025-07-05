@@ -56,11 +56,15 @@ public class RecordFragment extends Fragment implements AccountAdapter.OnItemDel
         View root = inflater.inflate(R.layout.fragment_record, container, false);
         listView = root.findViewById(R.id.record_list_view);
 
+        loadData();
         adapter = new AccountAdapter(getContext(), dataList, currentUserId);
         adapter.setOnItemDeleteListener(this);
+        adapter.setOnItemSharedListener(() -> {
+            loadData();
+            adapter.notifyDataSetChanged();
+        });
         listView.setAdapter(adapter);
 
-        loadData();
 
         return root;
     }
@@ -77,9 +81,7 @@ public class RecordFragment extends Fragment implements AccountAdapter.OnItemDel
         if (list != null) {
             dataList.addAll(list);
         }
-        if (adapter != null) {
-            adapter.notifyDataSetChanged();
-        }
+
     }
 
     /**

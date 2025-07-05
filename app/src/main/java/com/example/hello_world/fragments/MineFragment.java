@@ -31,8 +31,12 @@ public class MineFragment extends Fragment {
 
     public MineFragment() {}
 
-    public static MineFragment newInstance() {
-        return new MineFragment();
+    public static MineFragment newInstance(int currentUserId) {
+        MineFragment fragment = new MineFragment();
+        Bundle args = new Bundle();
+        args.putInt("CURRENT_USER_ID", currentUserId); // 将用户ID放入Bundle
+        fragment.setArguments(args); // 设置Bundle
+        return fragment;
     }
 
     private TextView tvUsername;
