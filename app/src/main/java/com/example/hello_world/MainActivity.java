@@ -480,7 +480,6 @@ public class MainActivity extends AppCompatActivity /* implements AccountAdapter
                 dialog.dismiss(); // 验证成功后手动关闭对话框
             }
         });
-        // 可选：为取消按钮也设置监听，确保它能正常关闭对话框
         Button negativeButton = dialog.getButton(DialogInterface.BUTTON_NEGATIVE);
         negativeButton.setOnClickListener(new View.OnClickListener() {
             @Override

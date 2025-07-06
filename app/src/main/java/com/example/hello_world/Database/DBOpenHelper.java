@@ -86,7 +86,7 @@ public class DBOpenHelper extends SQLiteOpenHelper {
         String sqlCreateShare = "CREATE TABLE share_record (" +
                 "id INTEGER PRIMARY KEY AUTOINCREMENT," +
                 "userId INTEGER," +
-                "recordId INTEGER," + // 仍然引用原学习记录（可选）
+                "recordId INTEGER," + // 仍然引用原学习记录
                 "shareNote TEXT," +
                 "shareTime TEXT)";
         sqLiteDatabase.execSQL(sqlCreateShare);

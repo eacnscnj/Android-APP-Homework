@@ -57,12 +57,11 @@ public class CommunityFragment extends Fragment {
         // 注册监听器
         ((MainActivity) requireActivity()).setOnRecordChangedListener(() -> {
             // 回调触发时执行刷新操作
-            refreshData();  // ← 你自己实现的数据刷新逻辑
+            refreshData();
         });
     }
 
     private void refreshData() {
-        // TODO: 实现你的数据刷新逻辑，比如重新获取列表、通知 adapter 等
         loadShareCards();
         Log.d("CommunityFragment", "数据已刷新");
     }
@@ -118,7 +117,7 @@ public class CommunityFragment extends Fragment {
             ImageView ivAvatar = card.findViewById(R.id.iv_avatar);
 
             tvUsername.setText(nickname);
-            tvSubjectTime.setText(typename + " | " + shareTimeFormatted + " | " + studyTime + " 小时");
+            tvSubjectTime.setText(typename + " | " + shareTimeFormatted + " | " + studyTime + " 分钟");
             tvContent.setText(shareNote);
             tvLikeCount.setText(helper.getLikeCount(shareId) + " 赞");
             tvCommentCount.setText(helper.getCommentCount(shareId) + " 评论");
