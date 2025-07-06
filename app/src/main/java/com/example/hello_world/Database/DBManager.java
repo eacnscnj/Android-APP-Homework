@@ -1,27 +1,36 @@
 package com.example.hello_world.Database;
 
 import android.annotation.SuppressLint;
-import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
 import com.example.hello_world.R;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Calendar;
+
 import java.util.Map;
 import java.util.LinkedHashMap; // 导入 LinkedHashMap
 
-// 管理数据库的类
+
+import android.util.Log;
+import android.content.ContentValues;
+import android.database.sqlite.SQLiteDatabase;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;// 管理数据库的类
+
+
 public class DBManager {
     private static SQLiteDatabase db;
     private static int currentUserId = -1; // **新增：存储当前登录用户的ID**
 
     public static void initDB(Context context) {
         DBOpenHelper helper = new DBOpenHelper(context);
+        dbHelper = new DBOpenHelper(context);
         db = helper.getWritableDatabase();
         if (db != null) {
             Log.d("DBManager", "Database initialized successfully.");
@@ -515,6 +524,58 @@ public class DBManager {
         return null;
     }
 
+    //分享，插入分享表
+    /**
+     * 插入一条分享记录
+     * @param userId 分享用户ID
+     * @param recordId 关联的学习记录ID
+     * @param shareNote 分享内容
+     * @return 是否插入成功
+     */
+
+    private static DBOpenHelper dbHelper;
+    private static final String TAG = "DBManager";
+
+
+    public static boolean insertShareRecord(int userId, int recordId, String shareNote) {
+        if (dbHelper == null) {
+            Log.e(TAG, "DBHelper未初始化，请先调用 DBManager.init(context) ");
+            return false;
+        }
+
+        SQLiteDatabase db = null;
+        boolean result = false;
+        try {
+            db = dbHelper.getWritableDatabase();
+
+            // 获取当前时间并格式化为中国常用时间格式
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA);
+            sdf.setTimeZone(TimeZone.getTimeZone("Asia/Shanghai"));
+            String formattedDate = sdf.format(new Date());
+
+            ContentValues values = new ContentValues();
+            values.put("userId", userId);
+            values.put("recordId", recordId);
+            values.put("shareNote", shareNote);
+            values.put("shareTime", formattedDate);  // 使用格式化后的时间字符串
+
+            long rowId = db.insert("share_record", null, values);
+            if (rowId != -1) {
+                result = true;
+            } else {
+                Log.e(TAG, "插入分享记录失败，返回id为-1");
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "插入分享记录异常", e);
+        } finally {
+            if (db != null) {
+                db.close();
+            }
+        }
+        return result;
+    }
+
+
     // **新增方法：插入新的学科类型到 typetb 表**
     /**
      * 插入新的学科类型到 typetb 表。
@@ -550,6 +611,7 @@ public class DBManager {
         }
         return result != -1;
     }
+
 
     // **新增方法：检查指定 kind 下是否存在同名类型**
     @SuppressLint("Range")

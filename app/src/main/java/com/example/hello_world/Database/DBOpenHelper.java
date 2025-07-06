@@ -54,7 +54,7 @@ public class DBOpenHelper extends SQLiteOpenHelper {
                 "password varchar(20)," +
                 "register_type integer," +
                 "nickname TEXT," +
-                "avatar_path TEXT)"; // 👈 新增字段
+                "avatar_path TEXT)"; //  新增字段
 
         sqLiteDatabase.execSQL(sql_Create_user_table);
         insertUserTable(sqLiteDatabase);
@@ -63,6 +63,35 @@ public class DBOpenHelper extends SQLiteOpenHelper {
         String sql = "create table studyTimeTable(id integer primary key autoincrement,typename varchar(12),focusImageID integer,note varchar(128),studyTime float,time varchar(64)," +
                 "year integer,mounth integer,day integer, kind integer, userId integer)"; // **新增 userId 字段**
         sqLiteDatabase.execSQL(sql);
+
+
+
+        // 创建点赞表 like_info，绑定 shareId
+        String sqlCreateLikeTable = "CREATE TABLE like_info (" +
+                "userId INTEGER," +
+                "shareId INTEGER," +
+                "PRIMARY KEY(userId, shareId))";
+        sqLiteDatabase.execSQL(sqlCreateLikeTable);
+
+// 创建评论表 comment_info，绑定 shareId
+        String sqlCreateCommentTable = "CREATE TABLE comment_info (" +
+                "commentId INTEGER PRIMARY KEY AUTOINCREMENT," +
+                "shareId INTEGER," +
+                "userId INTEGER," +
+                "content TEXT," +
+                "time TEXT)";
+        sqLiteDatabase.execSQL(sqlCreateCommentTable);
+
+// 分享记录表（保留 recordId 表示与学习记录关联）
+        String sqlCreateShare = "CREATE TABLE share_record (" +
+                "id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                "userId INTEGER," +
+                "recordId INTEGER," + // 仍然引用原学习记录（可选）
+                "shareNote TEXT," +
+                "shareTime TEXT)";
+        sqLiteDatabase.execSQL(sqlCreateShare);
+
+
     }
 
     private void insertType(SQLiteDatabase db){

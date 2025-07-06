@@ -128,9 +128,9 @@ public class MainActivity extends AppCompatActivity /* implements AccountAdapter
         currentSelectedContainer.setSelected(true);
 
         // 初始化 Fragment
-        recordFragment = new RecordFragment();
-        communityFragment = new CommunityFragment();
-        mineFragment = new MineFragment();
+        recordFragment = RecordFragment.newInstance(currentUserId);
+        communityFragment = CommunityFragment.newInstance(currentUserId);
+        mineFragment = MineFragment.newInstance(currentUserId);
 
         switchFragment(recordFragment);
     }
