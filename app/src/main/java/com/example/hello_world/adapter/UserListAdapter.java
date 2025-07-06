@@ -14,13 +14,13 @@ import android.widget.Toast;
 import com.example.hello_world.Database.DBManager;
 import com.example.hello_world.Database.UserInfo;
 import com.example.hello_world.R;
-import com.example.hello_world.AdminActivity; // 导入 AdminActivity 以便在主线程更新 UI
+import com.example.hello_world.AdminActivity;
 
 import java.util.List;
 import java.util.Locale;
 
 /**
- * UserListAdapter 是一个自定义的 BaseAdapter，用于在管理员页面 (AdminActivity) 中显示普通用户列表。
+ * 用于AdminActivity显示普通用户列表。
  * 每个列表项显示用户的用户名、总学习时长，并提供一个删除按钮来删除该用户及其所有学习记录。
  */
 public class UserListAdapter extends BaseAdapter {
@@ -29,28 +29,19 @@ public class UserListAdapter extends BaseAdapter {
     private List<UserDisplayData> mDatas; // 存储用于显示的数据，包含 UserInfo 和总学习时长
     private LayoutInflater inflater;
 
-    /**
-     * 定义一个接口，用于在用户删除后通知外部（AdminActivity）刷新列表。
-     */
+    // 删除监听接口
     public interface OnUserDeleteListener {
         void onUserDeleted(int userId); // 当用户被删除时回调，传入被删除用户的ID
     }
 
     private OnUserDeleteListener deleteListener;
 
-    /**
-     * 设置删除监听器的方法。
-     * @param listener 实现 OnUserDeleteListener 接口的监听器实例。
-     */
+    // 设置监听器
     public void setOnUserDeleteListener(OnUserDeleteListener listener) {
         this.deleteListener = listener;
     }
 
-    /**
-     * 构造函数。
-     * @param context 当前上下文。
-     * @param mDatas 初始的用户显示数据列表。
-     */
+    // 初始化
     public UserListAdapter(Context context, List<UserDisplayData> mDatas) {
         this.context = context;
         this.mDatas = mDatas;
@@ -88,12 +79,10 @@ public class UserListAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
         if (convertView == null) {
-            // 如果 convertView 为空，则加载布局并创建新的 ViewHolder
             convertView = inflater.inflate(R.layout.item_admin_user, parent, false);
             holder = new ViewHolder(convertView);
-            convertView.setTag(holder); // 将 ViewHolder 存储在 View 的 Tag 中
+            convertView.setTag(holder);
         } else {
-            // 如果 convertView 不为空，则重用现有的 ViewHolder
             holder = (ViewHolder) convertView.getTag();
         }
 
@@ -156,18 +145,11 @@ public class UserListAdapter extends BaseAdapter {
                 .show(); // 显示对话框
     }
 
-    /**
-     * ViewHolder 类用于缓存视图，优化 ListView 的滚动性能。
-     */
     static class ViewHolder {
         TextView usernameTv;    // 显示用户名的 TextView
         TextView studyTimeTv;   // 显示总学习时长的 TextView
         ImageView deleteButton; // 删除用户的按钮
 
-        /**
-         * ViewHolder 的构造函数。
-         * @param view 列表项的根视图。
-         */
         public ViewHolder(View view) {
             usernameTv = view.findViewById(R.id.item_admin_user_username);
             studyTimeTv = view.findViewById(R.id.item_admin_user_study_time);
@@ -183,11 +165,6 @@ public class UserListAdapter extends BaseAdapter {
         private UserInfo userInfo;
         private float totalStudyTime;
 
-        /**
-         * 构造函数。
-         * @param userInfo 用户的基本信息。
-         * @param totalStudyTime 用户的总学习时长（分钟）。
-         */
         public UserDisplayData(UserInfo userInfo, float totalStudyTime) {
             this.userInfo = userInfo;
             this.totalStudyTime = totalStudyTime;

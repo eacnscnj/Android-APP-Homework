@@ -30,13 +30,13 @@ public class DBManager {
         }
     }
 
-    // **新增：设置当前用户ID的方法**
+    // 存储当前用户id
     public static void setCurrentUserId(int userId) {
         currentUserId = userId;
         Log.d("DBManager", "Current user ID set to: " + currentUserId);
     }
 
-    // **新增：获取当前用户ID的方法**
+    // 获取当前用户id
     public static int getCurrentUserId() {
         return currentUserId;
     }
@@ -95,10 +95,11 @@ public class DBManager {
 
     }
 
+    // 获取特定日期的专注记录
     @SuppressLint("Range")
     public static List<AccountIn> getAccountListFromAccounttb(int year, int mounth, int day, int userId) { // **修改：添加 userId 参数**
         List<AccountIn> list = new ArrayList<>();
-        String sql = "select * from studyTimeTable where year=? and mounth=? and day=? AND userId = ? order by id desc"; // **修改：添加 userId 过滤**
+        String sql = "select * from studyTimeTable where year=? and mounth=? and day=? AND userId = ? order by id desc"; //
         Cursor cursor = null;
         try {
             cursor = db.rawQuery(sql, new String[]{String.valueOf(year), String.valueOf(mounth), String.valueOf(day), String.valueOf(userId)}); // **修改：传入 userId 参数**
@@ -124,13 +125,14 @@ public class DBManager {
         return list;
     }
 
+    // 获取所有时间段, 特定用户id的专注记录
     @SuppressLint("Range")
-    public static List<AccountIn> getAllAccountList(int userId) { // **修改：添加 userId 参数**
+    public static List<AccountIn> getAllAccountList(int userId) {
         List<AccountIn> list = new ArrayList<>();
-        String sql = "select * from studyTimeTable WHERE userId = ? order by year desc, mounth desc, day desc, id desc"; // **修改：添加 userId 过滤**
+        String sql = "select * from studyTimeTable WHERE userId = ? order by year desc, mounth desc, day desc, id desc";
         Cursor cursor = null;
         try {
-            cursor = db.rawQuery(sql, new String[]{String.valueOf(userId)}); // **修改：传入 userId 参数**
+            cursor = db.rawQuery(sql, new String[]{String.valueOf(userId)});
             while (cursor.moveToNext()) {
                 int id = cursor.getInt(cursor.getColumnIndexOrThrow("id"));
                 String typename = cursor.getString(cursor.getColumnIndexOrThrow("typename"));
@@ -166,7 +168,6 @@ public class DBManager {
     public static int deleteItemFromStudyTimeTableById(int id, int userId) { // **修改：添加 userId 参数**
         int rowsAffected = 0;
         try {
-            // **修改：添加 userId 过滤**
             rowsAffected = db.delete("studyTimeTable", "id=? AND userId=?", new String[]{String.valueOf(id), String.valueOf(userId)});
             if (rowsAffected > 0) {
                 Log.i("DBManager", "Deleted " + rowsAffected + " row from studyTimeTable with id: " + id + " for user: " + userId);
@@ -188,7 +189,7 @@ public class DBManager {
         int count = 0;
         Cursor cursor = null;
         try {
-            cursor = db.rawQuery("SELECT COUNT(id) FROM studyTimeTable WHERE userId = ?", new String[]{String.valueOf(userId)}); // **修改：添加 userId 过滤**
+            cursor = db.rawQuery("SELECT COUNT(id) FROM studyTimeTable WHERE userId = ?", new String[]{String.valueOf(userId)}); //
             if (cursor.moveToFirst()) {
                 count = cursor.getInt(0);
             }
@@ -211,7 +212,7 @@ public class DBManager {
         float totalTime = 0.0f;
         Cursor cursor = null;
         try {
-            cursor = db.rawQuery("SELECT SUM(studyTime) FROM studyTimeTable WHERE userId = ?", new String[]{String.valueOf(userId)}); // **修改：添加 userId 过滤**
+            cursor = db.rawQuery("SELECT SUM(studyTime) FROM studyTimeTable WHERE userId = ?", new String[]{String.valueOf(userId)}); //
             if (cursor.moveToFirst()) {
                 totalTime = cursor.getFloat(0);
             }
@@ -235,8 +236,7 @@ public class DBManager {
         Cursor cursor = null;
         Calendar calendar = null;
         try {
-            // 查询最早的 year, mounth, day 并按 userId 过滤
-            cursor = db.rawQuery("SELECT MIN(year), MIN(mounth), MIN(day) FROM studyTimeTable WHERE userId = ?", new String[]{String.valueOf(userId)}); // **修改：添加 userId 过滤**
+            cursor = db.rawQuery("SELECT MIN(year), MIN(mounth), MIN(day) FROM studyTimeTable WHERE userId = ?", new String[]{String.valueOf(userId)}); //
             if (cursor.moveToFirst()) {
                 if (cursor.getInt(0) != 0 || cursor.getInt(1) != 0 || cursor.getInt(2) != 0) { // 检查是否有有效日期
                     int year = cursor.getInt(0);
@@ -270,7 +270,7 @@ public class DBManager {
         Cursor cursor = null;
         try {
             cursor = db.rawQuery("SELECT COUNT(id) FROM studyTimeTable WHERE year=? AND mounth=? AND day=? AND userId=?",
-                    new String[]{String.valueOf(year), String.valueOf(month), String.valueOf(day), String.valueOf(userId)}); // **修改：添加 userId 过滤**
+                    new String[]{String.valueOf(year), String.valueOf(month), String.valueOf(day), String.valueOf(userId)}); //
             if (cursor.moveToFirst()) {
                 count = cursor.getInt(0);
             }
@@ -292,12 +292,12 @@ public class DBManager {
      * @param userId 用户的 ID
      * @return 当天总时长 (分钟)
      */
-    public static float getDailyStudyTime(int year, int month, int day, int userId) { // **修改：添加 userId 参数**
+    public static float getDailyStudyTime(int year, int month, int day, int userId) {
         float totalTime = 0.0f;
         Cursor cursor = null;
         try {
             cursor = db.rawQuery("SELECT SUM(studyTime) FROM studyTimeTable WHERE year=? AND mounth=? AND day=? AND userId=?",
-                    new String[]{String.valueOf(year), String.valueOf(month), String.valueOf(day), String.valueOf(userId)}); // **修改：添加 userId 过滤**
+                    new String[]{String.valueOf(year), String.valueOf(month), String.valueOf(day), String.valueOf(userId)}); //
             if (cursor.moveToFirst()) {
                 totalTime = cursor.getFloat(0);
             }
@@ -320,12 +320,12 @@ public class DBManager {
      * @return Map<String, Float>，键为专注类型名称，值为该类型总时长
      */
     @SuppressLint("Range")
-    public static Map<String, Float> getDailyStudyTimeDistribution(int year, int month, int day, int userId) { // **修改：添加 userId 参数**
+    public static Map<String, Float> getDailyStudyTimeDistribution(int year, int month, int day, int userId) {
         Map<String, Float> distribution = new LinkedHashMap<>();
         Cursor cursor = null;
         try {
-            String sql = "SELECT typename, SUM(studyTime) FROM studyTimeTable WHERE year=? AND mounth=? AND day=? AND userId=? GROUP BY typename"; // **修改：添加 userId 过滤**
-            cursor = db.rawQuery(sql, new String[]{String.valueOf(year), String.valueOf(month), String.valueOf(day), String.valueOf(userId)}); // **修改：传入 userId 参数**
+            String sql = "SELECT typename, SUM(studyTime) FROM studyTimeTable WHERE year=? AND mounth=? AND day=? AND userId=? GROUP BY typename";
+            cursor = db.rawQuery(sql, new String[]{String.valueOf(year), String.valueOf(month), String.valueOf(day), String.valueOf(userId)});
 
             while (cursor.moveToNext()) {
                 String typename = cursor.getString(cursor.getColumnIndexOrThrow("typename"));
@@ -345,15 +345,12 @@ public class DBManager {
     /*
     user_table 增删改查
      */
-
     public static int Insert_to_User_table(String username, String password, int register_type) {
         ContentValues values = new ContentValues();
         values.put("username", username);
         values.put("password", password);
         values.put("register_type", register_type);
-        // Note: The nullColumnHack parameter is usually not needed when using insert with ContentValues
-        // int insert = (int) db.insert("user_table", nullColumnHack, values); // Original line
-        int insert = (int) db.insert("user_table", null, values); // Corrected
+        int insert = (int) db.insert("user_table", null, values);
         return insert;
     }
 
@@ -414,16 +411,15 @@ public class DBManager {
         return null;
     }
 
-    // **新增方法：获取所有普通用户 (register_type = 0)**
+    // 获取普通用户, 用于管理员显示
     @SuppressLint("Range")
     public static List<UserInfo> getAllRegularUsers() {
         List<UserInfo> userList = new ArrayList<>();
         Cursor cursor = null;
         try {
-            // 查询 register_type 为 0 的用户
             cursor = db.query(
                     "user_table",
-                    new String[]{"id", "username", "password", "register_type"},
+                    new String[]{"id", "username", "password", "register_type", "nickname", "avatar_path"},
                     "register_type = ?",
                     new String[]{String.valueOf(0)}, // 0 代表普通用户
                     null, null, null
@@ -450,7 +446,7 @@ public class DBManager {
         return userList;
     }
 
-    // **新增方法：删除用户及其所有学习记录**
+    // 用户删除账户时也删除所有专注
     public static boolean deleteUserAndTheirRecords(int userIdToDelete) {
         try {
             db.beginTransaction(); // 开始事务
@@ -515,7 +511,6 @@ public class DBManager {
         return null;
     }
 
-    // **新增方法：插入新的学科类型到 typetb 表**
     /**
      * 插入新的学科类型到 typetb 表。
      * 默认图标使用 R.mipmap.one_more 和 R.mipmap.more_fs。
@@ -551,7 +546,6 @@ public class DBManager {
         return result != -1;
     }
 
-    // **新增方法：检查指定 kind 下是否存在同名类型**
     @SuppressLint("Range")
     private static boolean isTypeExists(String typename, int kind) {
         Cursor cursor = null;

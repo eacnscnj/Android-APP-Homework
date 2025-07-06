@@ -6,15 +6,14 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import android.app.AlertDialog; // 引入 AlertDialog
-import android.content.DialogInterface; // 引入 DialogInterface
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.GridView;
@@ -28,7 +27,6 @@ import com.example.hello_world.Database.TypeIn;
 import com.example.hello_world.R;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -47,8 +45,7 @@ public abstract class BaseFragment extends Fragment {
     GridView typeGrid;
     List<TypeIn>typeInList;
     AccountIn accountIn;//输入的数据
-    protected int currentUserId; // **新增：存储当前用户ID**
-    // **新增：添加学科按钮**
+    protected int currentUserId;
     private ImageView addSubjectBtn;
 
     @Override
@@ -83,7 +80,7 @@ public abstract class BaseFragment extends Fragment {
 
         loadDataToGrid(); // 首次加载数据
         setGridListener();
-        setAddSubjectListener(); // **新增：设置添加学科按钮监听器**
+        setAddSubjectListener(); // 设置添加学科监听器
         return view;
     }
 
@@ -122,12 +119,12 @@ public abstract class BaseFragment extends Fragment {
         );
     }
 
-    // **新增：设置添加学科按钮的监听器**
+    // 设置监听器
     private void setAddSubjectListener() {
         addSubjectBtn.setOnClickListener(v -> showAddSubjectDialog());
     }
 
-    // **新增：显示添加学科对话框**
+    // 添加学科
     private void showAddSubjectDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle("添加新学科");
@@ -161,16 +158,12 @@ public abstract class BaseFragment extends Fragment {
         builder.show();
     }
 
-    // **新增：添加新学科到数据库并刷新界面**
+    // 添加学科后刷新页面
     private void addNewSubject(String subjectName) {
-        // 调用 DBManager 插入新学科，使用默认图标和当前 Fragment 的 kind
-        // getFragmentKind() 是一个抽象方法，由子类实现
         boolean success = DBManager.insertNewType(subjectName, getFragmentKind());
         if (success) {
             Toast.makeText(getContext(), "学科“" + subjectName + "”添加成功！", Toast.LENGTH_SHORT).show();
             loadDataToGrid(); // 刷新 GridView
-            // 考虑自动选中新添加的学科 (可选，需要更复杂的逻辑来获取新插入的TypeIn对象)
-            // 目前，只是刷新，用户可能需要手动选择
         } else {
             Toast.makeText(getContext(), "学科“" + subjectName + "”已存在或添加失败！", Toast.LENGTH_SHORT).show();
         }
@@ -178,10 +171,9 @@ public abstract class BaseFragment extends Fragment {
 
 
     public void loadDataToGrid(){
-        // 此处不再直接调用 DBManager.getTypeList(kind)，而是由子类实现
-        // 因为 getTypeList 不需要 userId 过滤
     }
 
+    // 初始视图
     private void initView(View view){
         keyboardView = view.findViewById(R.id.fragment_record_keyboard);
         studyEdit = view.findViewById(R.id.fragment_record_top_edit);
@@ -190,9 +182,7 @@ public abstract class BaseFragment extends Fragment {
         timeText = view.findViewById(R.id.fragment_record_time);
         typeGrid = view.findViewById(R.id.fragment_record_gridView);
         typeText = view.findViewById(R.id.fragment_container_view_text);
-        // **新增：初始化添加学科按钮**
         addSubjectBtn = view.findViewById(R.id.fragment_record_add_subject_btn);
-
 
         studyEdit.setOnEditorActionListener(new TextView.OnEditorActionListener(){
             @Override
@@ -202,6 +192,7 @@ public abstract class BaseFragment extends Fragment {
         });
     }
 
+    // 设置专注时间
     public void triggerSaveAccount() {
         String inputText = studyEdit.getText().toString();
         if (TextUtils.isEmpty(inputText) || inputText.equals("0") || Float.parseFloat(inputText) <= 0) {
@@ -238,6 +229,5 @@ public abstract class BaseFragment extends Fragment {
 
     public abstract void saveAccountToDB() ;
 
-    // **新增抽象方法：获取当前 Fragment 对应的 kind 值**
     public abstract int getFragmentKind();
 }
