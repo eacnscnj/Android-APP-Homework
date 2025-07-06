@@ -1,5 +1,6 @@
 package com.example.hello_world;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageView;
@@ -20,9 +21,8 @@ import java.util.concurrent.Executors;
 public class AdminActivity extends AppCompatActivity implements UserListAdapter.OnUserDeleteListener {
 
     private static final String TAG = "AdminActivity";
-    private ListView userListView;
-    private UserListAdapter userListAdapter;
-    // **修改这里：将 List<UserInfo> 改为 List<UserListAdapter.UserDisplayData>**
+    private ListView userListView; // 用户列表
+    private UserListAdapter userListAdapter; // 中间件, 显示用户列表
     private List<UserListAdapter.UserDisplayData> regularUsersDisplayData; // 存储用于显示的用户数据
     private ExecutorService executorService; // 用于后台加载数据
 
@@ -34,7 +34,6 @@ public class AdminActivity extends AppCompatActivity implements UserListAdapter.
         userListView = findViewById(R.id.admin_user_list_view);
         ImageView backButton = findViewById(R.id.admin_back_btn);
 
-        // **初始化为 UserListAdapter.UserDisplayData 类型**
         regularUsersDisplayData = new ArrayList<>();
         userListAdapter = new UserListAdapter(this, regularUsersDisplayData);
         userListAdapter.setOnUserDeleteListener(this); // 设置删除监听器
@@ -43,7 +42,13 @@ public class AdminActivity extends AppCompatActivity implements UserListAdapter.
         executorService = Executors.newSingleThreadExecutor(); // 初始化线程池
 
         backButton.setOnClickListener(v -> {
-            finish(); // 返回上一个Activity (LoginActivity)
+            Log.d(TAG, "Admin back button clicked. Navigating to LoginActivity.");
+            // 创建一个 Intent 跳转到 LoginActivity
+            Intent intent = new Intent(AdminActivity.this, LoginActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            startActivity(intent);
+            // 销毁当前的 AdminActivity
+            finish();
         });
 
         loadRegularUsers(); // 加载用户数据
@@ -56,28 +61,28 @@ public class AdminActivity extends AppCompatActivity implements UserListAdapter.
         loadRegularUsers();
     }
 
+    // 后台线程处理数据读取, 前台线程处理UI
     private void loadRegularUsers() {
         Log.d(TAG, "Loading regular users...");
         executorService.execute(() -> {
-            // 在后台线程执行数据库操作
+            // 后台线程数据库操作
             List<UserInfo> users = DBManager.getAllRegularUsers();
-            List<UserListAdapter.UserDisplayData> tempDisplayDataList = new ArrayList<>(); // 临时列表
+            List<UserListAdapter.UserDisplayData> tempDisplayDataList = new ArrayList<>();
 
             for (UserInfo user : users) {
                 float totalStudyTime = DBManager.getTotalStudyTime(user.get_id());
-                // **在这里创建 UserListAdapter.UserDisplayData 对象并添加到临时列表**
                 tempDisplayDataList.add(new UserListAdapter.UserDisplayData(user, totalStudyTime));
             }
 
-            // 在主线程更新UI
+            // 前台线程操作UI
             runOnUiThread(() -> {
-                // **直接将构建好的 tempDisplayDataList 传递给适配器**
                 userListAdapter.setUsersDisplayData(tempDisplayDataList);
                 Log.d(TAG, "Loaded " + tempDisplayDataList.size() + " regular users.");
             });
         });
     }
 
+    // 删除用户
     @Override
     public void onUserDeleted(int userId) {
         // 用户删除成功后，重新加载列表
@@ -85,6 +90,7 @@ public class AdminActivity extends AppCompatActivity implements UserListAdapter.
         loadRegularUsers(); // 重新加载数据以刷新列表
     }
 
+    // 关闭后台线程
     @Override
     protected void onDestroy() {
         super.onDestroy();

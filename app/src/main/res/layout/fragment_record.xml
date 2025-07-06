@@ -27,10 +27,10 @@
             android:textColor="@android:color/black" />
 
         <ImageView
-            android:id="@+id/main_iv_search"
+            android:id="@+id/main_iv_back"
             android:layout_width="40dp"
             android:layout_height="match_parent"
-            android:src="@mipmap/search"
+            android:src="@mipmap/h_error"
             android:layout_alignParentRight="true"
             android:onClick="onClick"
             />

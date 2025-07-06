@@ -22,7 +22,6 @@ public class MajorFragment extends BaseFragment {
     @Override
     public void saveAccountToDB() {
         accountIn.setKind(1);
-        // userId 已经在 BaseFragment 的 onCreate 中设置到 accountIn
         DBManager.insertItemToTable(accountIn);
     }
 

@@ -45,14 +45,13 @@ public class StatisticsActivity extends AppCompatActivity {
     private Calendar currentDisplayDate;
     private SimpleDateFormat dateFormat;
 
-    private int currentUserId; // **新增：存储当前用户ID**
+    private int currentUserId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_statistics);
 
-        // **获取从 MainActivity 传递过来的用户ID**
         currentUserId = getIntent().getIntExtra("USER_ID", -1);
         if (currentUserId == -1) {
             Log.e(TAG, "Error: No user ID received. Redirecting or showing error.");
@@ -110,20 +109,18 @@ public class StatisticsActivity extends AppCompatActivity {
         loadDailyStatistics();
     }
 
+    // 计算累计专注数据(次数,总长度,平均每天时长)
     /**
      * 加载并显示累计统计数据
      */
     private void loadCumulativeStatistics() {
-        // **修改：调用 DBManager.getTotalFocusCount() 时传入 currentUserId**
         int totalFocusCount = DBManager.getTotalFocusCount(currentUserId);
         tvTotalFocusCount.setText(String.valueOf(totalFocusCount));
 
-        // **修改：调用 DBManager.getTotalStudyTime() 时传入 currentUserId**
         float totalStudyTime = DBManager.getTotalStudyTime(currentUserId);
         tvTotalStudyTime.setText(String.format(Locale.getDefault(), "%.0f", totalStudyTime));
 
         float dailyAverageTime = 0.0f;
-        // **修改：调用 DBManager.getFirstRecordDate() 时传入 currentUserId**
         Calendar firstRecordDate = DBManager.getFirstRecordDate(currentUserId);
         if (firstRecordDate != null) {
             Calendar today = Calendar.getInstance();
@@ -157,11 +154,9 @@ public class StatisticsActivity extends AppCompatActivity {
         String formattedDate = dateFormat.format(currentDisplayDate.getTime());
         tvCurrentDateTitle.setText("当日专注 " + formattedDate);
 
-        // **修改：调用 DBManager.getDailyFocusCount() 时传入 currentUserId**
         int todayFocusCount = DBManager.getDailyFocusCount(year, month, day, currentUserId);
         tvTodayFocusCount.setText(String.valueOf(todayFocusCount));
 
-        // **修改：调用 DBManager.getDailyStudyTime() 时传入 currentUserId**
         float todayStudyTime = DBManager.getDailyStudyTime(year, month, day, currentUserId);
         tvTodayStudyTime.setText(String.format(Locale.getDefault(), "%.0f", todayStudyTime));
 
@@ -206,7 +201,6 @@ public class StatisticsActivity extends AppCompatActivity {
      * @param day 日
      */
     private void loadPieChartData(int year, int month, int day) {
-        // **修改：调用 DBManager.getDailyStudyTimeDistribution() 时传入 currentUserId**
         java.util.Map<String, Float> distributionData = DBManager.getDailyStudyTimeDistribution(year, month, day, currentUserId);
 
         ArrayList<PieEntry> entries = new ArrayList<>();
@@ -273,7 +267,6 @@ public class StatisticsActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        // **在 onResume 再次获取确保用户 ID 是最新的**
         currentUserId = DBManager.getCurrentUserId();
         if (currentUserId == -1) {
             Log.e(TAG, "Error: currentUserId is -1 in onResume.");
