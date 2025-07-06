@@ -20,10 +20,6 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.ListView;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
-import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
@@ -37,7 +33,6 @@ import com.example.hello_world.Database.TypeIn;
 import com.example.hello_world.fragments.RecordFragment;
 import com.example.hello_world.fragments.CommunityFragment;
 import com.example.hello_world.fragments.MineFragment;
-import com.example.hello_world.adapter.AccountAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,12 +40,11 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity /* implements AccountAdapter.OnItemDeleteListener */ {
 
     private static final String TAG = "MainActivityDebug";
-
-    private AppCompatButton editButton;
-    private ImageButton moreButton;
-    private AppCompatButton statisticsButton;
-    private AppCompatButton focusButton; // 新增
-    private boolean isMenuOpen = false;
+    private AppCompatButton editButton; // 增加数据
+    private ImageButton moreButton; // 更多
+    private AppCompatButton statisticsButton; // 可视化
+    private AppCompatButton focusButton; // 专注
+    private boolean isMenuOpen = false; // 存储更多菜单是否开启
 
     private int radius = 400;
 
@@ -89,21 +83,21 @@ public class MainActivity extends AppCompatActivity /* implements AccountAdapter
     AccountAdapter adapter;
 
     private void initTime() {
-        // 这里如果不用时间可删，否则保留
     }
 
+    // 入口点
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) { // 参数是该页面销毁时保存的数据,用于恢复
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_main); // 设置视图
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
-        });
+        }); // 处理窗口避免内容被UI遮挡
 
-        DBManager.initDB(this);
+        DBManager.initDB(this); // 初始化所需的数据库
 
         // 获取当前用户ID
         currentUserId = DBManager.getCurrentUserId();
@@ -115,34 +109,18 @@ public class MainActivity extends AppCompatActivity /* implements AccountAdapter
 
         initTime();
 
-        // 以下注释，数据和适配器逻辑已移至 RecordFragment
-        /*
-        todayLv = findViewById(R.id.main_lv);
-        mDatas = new ArrayList<>();
-        adapter = new AccountAdapter(this, mDatas, currentUserId);
-        todayLv.setAdapter(adapter);
-        adapter.setOnItemDeleteListener(this);
-        */
-
+        // 设置按钮对应的icon
         editButton = findViewById(R.id.main_btn_edit);
         statisticsButton = findViewById(R.id.main_btn_statistics);
-        focusButton = findViewById(R.id.main_btn_focus); // 获取引用
-        if (statisticsButton == null) {
-            Log.e(TAG, "Error: statisticsButton is null! Check R.id.main_btn_edit in XML.");
-        } else {
-            Log.d(TAG, "statisticsButton initialized successfully.");
-        }
+        focusButton = findViewById(R.id.main_btn_focus);
         moreButton = findViewById(R.id.main_btn_more);
 
-        /*
-        loadDBData();
-        */
-
+        // 设置底边栏的icon
         navRecordContainer = findViewById(R.id.nav_record_container);
         navCommunityContainer = findViewById(R.id.nav_community_container);
         navMineContainer = findViewById(R.id.nav_mine_container);
 
-        // 默认选中第一个
+        // 底边栏设置
         currentSelectedContainer = navRecordContainer;
         currentSelectedContainer.setSelected(true);
 
@@ -163,7 +141,7 @@ public class MainActivity extends AppCompatActivity /* implements AccountAdapter
         currentSelectedContainer = selected;
     }
 
-    // 切换 Fragment
+    // 切换 Fragment, 使用事务方式, 先隐藏再通过筛选显示特定页面
     private void switchFragment(androidx.fragment.app.Fragment targetFragment) {
         androidx.fragment.app.FragmentManager fm = getSupportFragmentManager();
         androidx.fragment.app.FragmentTransaction transaction = fm.beginTransaction();
@@ -179,6 +157,7 @@ public class MainActivity extends AppCompatActivity /* implements AccountAdapter
         transaction.commitAllowingStateLoss();
     }
 
+    // 处理返回到该页面时的加载, 使该Activity可见
     @Override
     protected void onResume() {
         super.onResume();
@@ -187,36 +166,21 @@ public class MainActivity extends AppCompatActivity /* implements AccountAdapter
         if (currentUserId == -1) {
             Log.e(TAG, "Error: currentUserId is -1 in onResume.");
         }
-        // 数据刷新逻辑放到各Fragment中
     }
 
-    /*
-    private void loadDBData() {
-        List<AccountIn> list = DBManager.getAllAccountList(currentUserId);
-        Log.d(TAG, "Loaded " + list.size() + " items for user " + currentUserId + " from DB.");
-        mDatas.clear();
-        mDatas.addAll(list);
-        adapter.notifyDataSetChanged();
-    }
-
-    @Override
-    public void onItemDeleted() {
-        Log.d(TAG, "onItemDeleted callback received, reloading data.");
-        loadDBData();
-    }
-    */
-
+    // 处理该页面的点击事件
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.main_iv_search:
-                Log.d(TAG, "Search button clicked.");
+            case R.id.main_iv_back:
+                Intent backjmp = new Intent(this, LoginActivity.class);
+                startActivity(backjmp);
                 break;
             case R.id.main_btn_edit:
                 Log.d(TAG, "Edit (Record) button clicked. Navigating to RecordActivity.");
                 toggleRadialMenu();
-                Intent jmp = new Intent(this, RecordActivity.class);
-                jmp.putExtra("USER_ID", currentUserId);
-                startActivity(jmp);
+                Intent jmp = new Intent(this, RecordActivity.class); // 组件之间的通信
+                jmp.putExtra("USER_ID", currentUserId); // 放入用户ID以供后续使用
+                startActivity(jmp); // 启动对应组件
                 break;
             case R.id.main_btn_statistics:
                 Log.d(TAG, "Statistics button clicked. Navigating to StatisticsActivity.");
@@ -225,10 +189,9 @@ public class MainActivity extends AppCompatActivity /* implements AccountAdapter
                 statsJmp.putExtra("USER_ID", currentUserId);
                 startActivity(statsJmp);
                 break;
-            case R.id.main_btn_focus: // <-- 新增的 case
+            case R.id.main_btn_focus:
                 Log.d(TAG, "Focus button clicked. (Add your custom action here)");
-                toggleRadialMenu(); // 点击后隐藏径向菜单，如果需要
-                // 在这里添加 main_btn_focus 被点击时你希望执行的特定逻辑。
+                toggleRadialMenu();
                 showIntegratedFocusConfigDialog();
                 break;
             case R.id.main_btn_more:
@@ -247,19 +210,16 @@ public class MainActivity extends AppCompatActivity /* implements AccountAdapter
                 selectNavContainer(navMineContainer);
                 switchFragment(mineFragment);
                 break;
-
         }
     }
 
-
-    // toggleRadialMenu 和动画相关代码保持不变
-
+    // 二级菜单打开/关闭时的动画
     private void toggleRadialMenu() {
         if (isMenuOpen) {
             // 关闭菜单时
             animateMenuClose(editButton, 0);
             animateMenuClose(statisticsButton, 1);
-            animateMenuClose(focusButton, 2); // <-- 为 focusButton 添加关闭动画，使用新索引 (例如 2)
+            animateMenuClose(focusButton, 2);
 
             moreButton.animate().rotation(0f).setDuration(300).start();
             isMenuOpen = false;
@@ -267,18 +227,20 @@ public class MainActivity extends AppCompatActivity /* implements AccountAdapter
             // 打开菜单时
             editButton.setVisibility(View.VISIBLE);
             statisticsButton.setVisibility(View.VISIBLE);
-            focusButton.setVisibility(View.VISIBLE); // <-- 设置 focusButton 可见
+            focusButton.setVisibility(View.VISIBLE);
 
             animateMenuOpen(editButton, 0);
             animateMenuOpen(statisticsButton, 1);
-            animateMenuOpen(focusButton, 2); // <-- 为 focusButton 添加打开动画，使用新索引 (例如 2)
+            animateMenuOpen(focusButton, 2);
 
             moreButton.animate().rotation(45f).setDuration(300).start();
             isMenuOpen = true;
         }
     }
 
+    // 对应二级菜单的开启动画
     private void animateMenuOpen(View view, int index) {
+        // 设置偏移位置
         double startAngleDegrees = -175;
         double angleIncrement = 40;
         double currentAngleDegrees = startAngleDegrees + (index * angleIncrement);
@@ -288,6 +250,7 @@ public class MainActivity extends AppCompatActivity /* implements AccountAdapter
 
         Log.d(TAG, "Animating " + view.getId() + " to X: " + targetX + ", Y: " + targetY);
 
+        // 设置动画
         AnimatorSet animatorSet = new AnimatorSet();
         animatorSet.playTogether(
                 ObjectAnimator.ofFloat(view, "translationX", 0, targetX),
@@ -301,6 +264,7 @@ public class MainActivity extends AppCompatActivity /* implements AccountAdapter
         animatorSet.start();
     }
 
+    // 二级菜单关闭
     private void animateMenuClose(View view, int index) {
         double startAngleDegrees = -175;
         double angleIncrement = 40;
@@ -319,6 +283,7 @@ public class MainActivity extends AppCompatActivity /* implements AccountAdapter
         );
         animatorSet.setDuration(300);
         animatorSet.setStartDelay(index * 50);
+        // 关闭动画结束后, 二级菜单不再占用位置
         animatorSet.addListener(new android.animation.Animator.AnimatorListener() {
             @Override public void onAnimationStart(android.animation.Animator animation) {}
             @Override public void onAnimationEnd(android.animation.Animator animation) {

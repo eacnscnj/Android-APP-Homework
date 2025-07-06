@@ -1,8 +1,8 @@
 package com.example.hello_world.adapter;
 
-import android.app.AlertDialog; // 引入 AlertDialog
+import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface; // 引入 DialogInterface
+import android.content.DialogInterface;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,33 +19,35 @@ import com.example.hello_world.R;
 
 import java.util.List;
 
+// 负责将数据库提取的数据转换成视图可用的形式
 public class AccountAdapter extends BaseAdapter {
 
     private static final String TAG = "AccountAdapter";
-    private Context context;
-    private List<AccountIn> mDatas;
-    private LayoutInflater inflater;
-    private int currentUserId; // **新增：存储当前登录用户的ID**
+    private Context context; // 获取对应包含Activity信息的上下文
+    private List<AccountIn> mDatas; // 数据库信息
+    private LayoutInflater inflater; // 转换XML文件到View
+    private int currentUserId;
 
     public interface OnItemDeleteListener {
         void onItemDeleted();
     }
 
-    private OnItemDeleteListener deleteListener;
+    private OnItemDeleteListener deleteListener; // 为Fragment和Activity之间提供通信, 当删除数据后用于刷新页面
 
     public void setOnItemDeleteListener(OnItemDeleteListener listener) {
-        this.deleteListener = listener;
+        this.deleteListener = listener; // 设置删除监听器
     }
 
-    // **修改构造函数：现在接受 currentUserId 参数**
+    // 初始化
     public AccountAdapter(Context context, List<AccountIn> mDatas, int currentUserId) {
         this.context = context;
         this.mDatas = mDatas;
         this.inflater = LayoutInflater.from(context);
-        this.currentUserId = currentUserId; // **初始化 currentUserId**
+        this.currentUserId = currentUserId;
         Log.d(TAG, "AccountAdapter initialized with User ID: " + currentUserId);
     }
 
+    // 设置数据库数据
     public void setDatas(List<AccountIn> newDatas) {
         this.mDatas = newDatas;
         notifyDataSetChanged();
@@ -66,6 +68,7 @@ public class AccountAdapter extends BaseAdapter {
         return i;
     }
 
+    // 为每一个数据创建一个视图
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
         ViewHolder holder;
@@ -139,16 +142,14 @@ public class AccountAdapter extends BaseAdapter {
                 .setPositiveButton("删除", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        // **调用 DBManager 的删除方法，并传入 itemId 和 currentUserId**
                         int rowsAffected = DBManager.deleteItemFromStudyTimeTableById(itemId, currentUserId);
 
                         if (rowsAffected > 0) {
                             Toast.makeText(context, "记录删除成功！", Toast.LENGTH_SHORT).show();
                             Log.d(TAG, "Item deleted from DB for ID: " + itemId + " by User ID: " + currentUserId);
 
-                            // 通知监听器数据已删除，以便外部刷新列表
                             if (deleteListener != null) {
-                                deleteListener.onItemDeleted();
+                                deleteListener.onItemDeleted(); // 通知监听器删除事件发生
                             }
                         } else {
                             Toast.makeText(context, "删除失败或记录不属于您。", Toast.LENGTH_SHORT).show();
@@ -160,6 +161,7 @@ public class AccountAdapter extends BaseAdapter {
                 .show();
     }
 
+    // 视图整体，存储数据库提取条目的信息，并提前找到所有视图组件
     static class ViewHolder {
         ImageView typeIv;
         TextView typeTv, noteTv, timeTv, studyTv, tvStartTime;
