@@ -432,7 +432,7 @@ public class DBManager {
             // 查询 register_type 为 0 的用户
             cursor = db.query(
                     "user_table",
-                    new String[]{"id", "username", "password", "register_type"},
+                    new String[]{"id", "username", "password", "register_type","nickname","avatar_path"},
                     "register_type = ?",
                     new String[]{String.valueOf(0)}, // 0 代表普通用户
                     null, null, null
