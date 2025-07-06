@@ -31,8 +31,12 @@ public class MineFragment extends Fragment {
 
     public MineFragment() {}
 
-    public static MineFragment newInstance() {
-        return new MineFragment();
+    public static MineFragment newInstance(int currentUserId) {
+        MineFragment fragment = new MineFragment();
+        Bundle args = new Bundle();
+        args.putInt("CURRENT_USER_ID", currentUserId); // 将用户ID放入Bundle
+        fragment.setArguments(args); // 设置Bundle
+        return fragment;
     }
 
     private TextView tvUsername;
@@ -96,14 +100,14 @@ public class MineFragment extends Fragment {
         }
 
         // 我的目标
-        View goalsCard = view.findViewById(R.id.card_goals); // ID 是 card_goals
-        if (goalsCard != null) {
-            goalsCard.setOnClickListener(v -> {
-                // TODO: 这里可能需要跳转到 GoalsActivity 而不是 HelpActivity
-                Intent intent = new Intent(getActivity(), HelpActivity.class);
-                startActivity(intent);
-            });
-        }
+//        View goalsCard = view.findViewById(R.id.card_goals); // ID 是 card_goals
+//        if (goalsCard != null) {
+//            goalsCard.setOnClickListener(v -> {
+//                // TODO: 这里可能需要跳转到 GoalsActivity 而不是 HelpActivity
+//                Intent intent = new Intent(getActivity(), HelpActivity.class);
+//                startActivity(intent);
+//            });
+//        }
 
         // 我的记录
         View recordsCard = view.findViewById(R.id.card_records); // ID 是 card_records

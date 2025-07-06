@@ -36,7 +36,8 @@ import com.example.hello_world.fragments.MineFragment;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+
+public class MainActivity extends AppCompatActivity /* implements AccountAdapter.OnItemDeleteListener */ {
 
     private static final String TAG = "MainActivityDebug";
     private AppCompatButton editButton; // 增加数据
@@ -57,6 +58,29 @@ public class MainActivity extends AppCompatActivity {
     private RecordFragment recordFragment;
     private CommunityFragment communityFragment;
     private MineFragment mineFragment;
+
+
+    public interface OnRecordChangedListener {
+        void onRecordChanged(); // 比如告诉“社区”或“统计”页面：数据变了
+    }
+
+    // 保存监听器引用
+    private OnRecordChangedListener recordChangedListener;
+
+    // 提供设置监听器的方法
+    public void setOnRecordChangedListener(OnRecordChangedListener listener) {
+        this.recordChangedListener = listener;
+    }
+
+    // 提供触发监听的方法
+    public void notifyRecordChanged() {
+        if (recordChangedListener != null) {
+            recordChangedListener.onRecordChanged();
+        }
+    }
+    ListView todayLv;
+    List<AccountIn>mDatas;
+    AccountAdapter adapter;
 
     private void initTime() {
     }
@@ -101,9 +125,9 @@ public class MainActivity extends AppCompatActivity {
         currentSelectedContainer.setSelected(true);
 
         // 初始化 Fragment
-        recordFragment = new RecordFragment();
-        communityFragment = new CommunityFragment();
-        mineFragment = new MineFragment();
+        recordFragment = RecordFragment.newInstance(currentUserId);
+        communityFragment = CommunityFragment.newInstance(currentUserId);
+        mineFragment = MineFragment.newInstance(currentUserId);
 
         switchFragment(recordFragment);
     }

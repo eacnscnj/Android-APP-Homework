@@ -8,7 +8,6 @@
     android:background="#F5F5F5"
     android:padding="8dp">
 
-    <!-- 顶部标题栏 -->
     <TextView
         android:id="@+id/tv_title"
         android:layout_width="match_parent"
@@ -20,7 +19,6 @@
         android:paddingStart="16dp"
         android:textColor="@android:color/black" />
 
-    <!-- 内容列表 -->
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -30,84 +28,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-
-            <!--  示例条目 1（未来可用 RecyclerView 实现） -->
-            <androidx.cardview.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                app:cardCornerRadius="8dp"
-                app:cardElevation="2dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="12dp">
-
-                    <!-- 用户信息 -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical">
-
-                        <ImageView
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
-                            android:src="@drawable/me"
-                            android:scaleType="centerCrop"
-                            android:layout_marginEnd="8dp"
-                            android:backgroundTint="@android:color/darker_gray"
-                             />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="匿名用户"
-                            android:textStyle="bold"
-                            android:textSize="16sp"
-                            android:textColor="@android:color/black" />
-                    </LinearLayout>
-
-                    <!-- 动态内容 -->
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:text="今天被吃穷了，下次得叫上妹妹。"
-                        android:textSize="15sp"
-                        android:textColor="#333333" />
-
-                    <!-- 点赞 / 评论操作区 -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="end"
-                        android:layout_marginTop="8dp">
-
-                        <ImageButton
-                            android:id="@+id/btn_like"
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
-                            android:background="@android:color/transparent"
-                            android:src="@drawable/thumb_up"
-                            android:contentDescription="点赞" />
-
-                        <ImageButton
-                            android:id="@+id/btn_comment"
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
-                            android:background="@android:color/transparent"
-                            android:src="@drawable/comment"
-                            android:contentDescription="评论" />
-                    </LinearLayout>
-
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
-
-            <!-- ⬇️ 更多条目可以复制上方 CardView -->
 
         </LinearLayout>
     </ScrollView>

@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="8dp"
-    android:background="@drawable/item_background_shape">
+    android:background="@drawable/item_background_shape"
+    android:foreground="?attr/selectableItemBackground">
 
     <ImageView
         android:id="@+id/item_mainlv_iv"
