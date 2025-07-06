@@ -12,6 +12,7 @@ import android.widget.ListView;
 
 import com.example.hello_world.Database.AccountIn;
 import com.example.hello_world.Database.DBManager;
+import com.example.hello_world.MainActivity;
 import com.example.hello_world.R;
 import com.example.hello_world.adapter.AccountAdapter;
 
@@ -58,13 +59,18 @@ public class RecordFragment extends Fragment implements AccountAdapter.OnItemDel
 
         loadData();
         adapter = new AccountAdapter(getContext(), dataList, currentUserId);
+
+        // ✅ 设置删除监听器（通过接口实现）
         adapter.setOnItemDeleteListener(this);
+
+        // ✅ 设置分享监听器（使用 Lambda 表达式）
         adapter.setOnItemSharedListener(() -> {
             loadData();
             adapter.notifyDataSetChanged();
+            ((MainActivity) requireActivity()).notifyRecordChanged();
         });
-        listView.setAdapter(adapter);
 
+        listView.setAdapter(adapter);
 
         return root;
     }
@@ -81,15 +87,19 @@ public class RecordFragment extends Fragment implements AccountAdapter.OnItemDel
         if (list != null) {
             dataList.addAll(list);
         }
-
     }
 
     /**
-     * 监听适配器中删除操作，刷新列表
+     * 监听适配器中删除操作，刷新列表并更新界面
      */
     @Override
     public void onItemDeleted() {
         loadData();
+        if (adapter != null) {
+            adapter.notifyDataSetChanged();
+        }
+
+        ((MainActivity) requireActivity()).notifyRecordChanged();
     }
 
     /**
@@ -97,5 +107,8 @@ public class RecordFragment extends Fragment implements AccountAdapter.OnItemDel
      */
     public void refreshData() {
         loadData();
+        if (adapter != null) {
+            adapter.notifyDataSetChanged();
+        }
     }
 }
