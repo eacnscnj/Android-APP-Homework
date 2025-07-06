@@ -93,8 +93,6 @@ public class LikeCommentHelper {
     }
 
     public String getUserNicknameById(int userId) {
-        // 你可以用DB查询或者缓存查用户昵称
-        // 这里给个示例写法，需根据你代码调整
         Cursor cursor = db.query("user_table", new String[]{"nickname"}, "id=?", new String[]{String.valueOf(userId)}, null, null, null);
         String nickname = null;
         if (cursor != null) {

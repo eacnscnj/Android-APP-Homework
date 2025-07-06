@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +23,7 @@ import androidx.fragment.app.Fragment;
 import com.example.hello_world.Database.CommentInfo;
 import com.example.hello_world.Database.DBOpenHelper;
 import com.example.hello_world.Database.LikeCommentHelper;
+import com.example.hello_world.MainActivity;
 import com.example.hello_world.R;
 
 import java.io.File;
@@ -34,6 +36,7 @@ public class CommunityFragment extends Fragment {
 
     private int currentUserId; // 当前登录用户ID，需要从外部传入或获取
 
+    private LinearLayout containerLayout;  // 提升为类成员变量
     public CommunityFragment() {}
 
     public static CommunityFragment newInstance(int currentUserId) {
@@ -50,19 +53,30 @@ public class CommunityFragment extends Fragment {
         if (getArguments() != null) {
             currentUserId = getArguments().getInt("CURRENT_USER_ID", -1);
         }
+
+        // 注册监听器
+        ((MainActivity) requireActivity()).setOnRecordChangedListener(() -> {
+            // 回调触发时执行刷新操作
+            refreshData();  // ← 你自己实现的数据刷新逻辑
+        });
     }
 
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_community, container, false);
-        LinearLayout containerLayout = view.findViewById(R.id.community_container);
+    private void refreshData() {
+        // TODO: 实现你的数据刷新逻辑，比如重新获取列表、通知 adapter 等
+        loadShareCards();
+        Log.d("CommunityFragment", "数据已刷新");
+    }
+
+    private void loadShareCards() {
+        containerLayout.removeAllViews(); // ✅ 清空旧视图
 
         DBOpenHelper dbHelper = new DBOpenHelper(requireContext());
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         LikeCommentHelper helper = new LikeCommentHelper(requireContext());
 
         Cursor cursor = db.rawQuery("SELECT * FROM share_record ORDER BY shareTime DESC", null);
+        LayoutInflater inflater = LayoutInflater.from(requireContext());
+
         while (cursor.moveToNext()) {
             int shareId = cursor.getInt(cursor.getColumnIndexOrThrow("id"));
             int shareUserId = cursor.getInt(cursor.getColumnIndexOrThrow("userId")); // 分享者ID
@@ -183,8 +197,20 @@ public class CommunityFragment extends Fragment {
         }
 
         cursor.close();
+    }
+
+
+
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_community, container, false);
+        containerLayout = view.findViewById(R.id.community_container);  // 提升作用域
+
+        loadShareCards();  // 初始化加载
         return view;
     }
+
 
     // 时间戳转中国常用日期格式字符串，例："2025-07-05 16:40"
     private String formatTimestamp(String timestampStr) {
