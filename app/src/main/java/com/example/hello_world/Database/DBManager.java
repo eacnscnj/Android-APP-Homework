@@ -81,7 +81,7 @@ public class DBManager {
 
         values.put("typename", accountIn.getTypename());
         values.put("focusImageID", accountIn.getFocusImageID());
-        values.put("note", accountIn.getNote());
+        values.put("note", accountIn.getNote()); 
         values.put("studyTime", accountIn.getStudyTime());
         values.put("time", accountIn.getTime());
         values.put("year", accountIn.getYear());
