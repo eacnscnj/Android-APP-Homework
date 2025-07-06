@@ -25,10 +25,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/fragment_container_view_text"
-        android:text="其他"
-        android:layout_toRightOf="@id/fragment_record_top_image"
-        android:layout_centerVertical="true"
-        android:layout_marginLeft="8dp"/>
+            android:text="其他"
+            android:layout_toRightOf="@id/fragment_record_top_image"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="8dp"/>
+
         <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -41,6 +42,16 @@
             android:background="@android:color/transparent"
             android:focusable="true"
             android:inputType="number"/>
+
+        <ImageView
+            android:id="@+id/fragment_record_add_subject_btn"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@android:drawable/ic_input_add" android:layout_toLeftOf="@id/fragment_record_top_edit"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="16dp"
+            android:contentDescription="添加新学科" />
+
     </RelativeLayout>
     <View
         android:layout_width="match_parent"
