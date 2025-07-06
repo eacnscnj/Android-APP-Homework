@@ -33,6 +33,7 @@ import com.example.hello_world.Database.TypeIn;
 import com.example.hello_world.fragments.RecordFragment;
 import com.example.hello_world.fragments.CommunityFragment;
 import com.example.hello_world.fragments.MineFragment;
+import com.example.hello_world.adapter.AccountAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
