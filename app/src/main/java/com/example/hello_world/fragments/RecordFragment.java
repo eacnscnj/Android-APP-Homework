@@ -31,7 +31,7 @@ public class RecordFragment extends Fragment implements AccountAdapter.OnItemDel
     }
 
     /**
-     * 静态工厂方法传入用户ID（可选）
+     * 静态工厂方法传入用户ID
      */
     public static RecordFragment newInstance(int userId) {
         RecordFragment fragment = new RecordFragment();

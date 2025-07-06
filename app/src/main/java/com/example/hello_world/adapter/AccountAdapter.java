@@ -211,7 +211,6 @@ public class AccountAdapter extends BaseAdapter {
         builder.setPositiveButton("确定", (dialog, which) -> {
             String shareContent = input.getText().toString().trim();
             if (!shareContent.isEmpty()) {
-                // 保存分享到数据库，示例调用DBManager（需你实现）
                 boolean success = DBManager.insertShareRecord(
                         currentUserId,
                         accountIn.getId(),

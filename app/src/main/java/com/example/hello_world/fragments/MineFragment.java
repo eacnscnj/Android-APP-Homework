@@ -103,7 +103,6 @@ public class MineFragment extends Fragment {
 //        View goalsCard = view.findViewById(R.id.card_goals); // ID 是 card_goals
 //        if (goalsCard != null) {
 //            goalsCard.setOnClickListener(v -> {
-//                // TODO: 这里可能需要跳转到 GoalsActivity 而不是 HelpActivity
 //                Intent intent = new Intent(getActivity(), HelpActivity.class);
 //                startActivity(intent);
 //            });
