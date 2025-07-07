@@ -629,4 +629,53 @@ public class DBManager {
             }
         }
     }
+
+    // 确保在所有需要数据库操作的地方都能获取到有效的db实例
+    private static SQLiteDatabase getWritableDatabase() {
+        if (db == null || !db.isOpen()) {
+            if (dbHelper == null) {
+                // 如果 dbHelper 尚未初始化，这意味着 initDB 未被调用
+                // 这是一种错误状态，应确保在应用程序启动时调用 initDB
+                Log.e(TAG, "DBManager has not been initialized. Call initDB(Context) first.");
+                // 抛出运行时异常以避免后续的NullPointerException
+                throw new IllegalStateException("DBManager has not been initialized.");
+            }
+            db = dbHelper.getWritableDatabase();
+        }
+        return db;
+    }
+
+
+    /**
+     * 更新用户表的头像路径
+     * @param userId 用户的ID
+     * @param avatarPath 头像文件在应用内部存储的绝对路径
+     * @return true 表示更新成功，false 表示更新失败
+     */
+    public static boolean updateUserAvatarPath(int userId, String avatarPath) {
+        SQLiteDatabase database = getWritableDatabase(); // 获取数据库实例
+        ContentValues values = new ContentValues();
+        values.put("avatar_path", avatarPath); // "avatar_path" 必须是 user_table 中头像路径字段的正确列名
+
+        int rowsAffected = 0;
+        try {
+            rowsAffected = database.update(
+                    "user_table",      // 表名
+                    values,            // 要更新的值
+                    "id = ?",          // WHERE 子句，用于指定更新哪一行
+                    new String[]{String.valueOf(userId)} // WHERE 子句的参数
+            );
+
+            if (rowsAffected > 0) {
+                Log.i(TAG, "Successfully updated avatar path for user ID: " + userId + " to: " + avatarPath);
+                return true;
+            } else {
+                Log.w(TAG, "Failed to update avatar path for user ID: " + userId + ". User not found or path unchanged.");
+                return false;
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "Error updating avatar path for user ID: " + userId + ": " + e.getMessage(), e);
+            return false;
+        }
+    }
 }
