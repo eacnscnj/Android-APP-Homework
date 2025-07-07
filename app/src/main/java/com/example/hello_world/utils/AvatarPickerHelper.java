@@ -19,6 +19,8 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.RequiresApi;
 import androidx.core.content.ContextCompat;
 
+import com.example.hello_world.Database.DBManager; // 导入 DBManager
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
@@ -26,12 +28,14 @@ import java.io.InputStream;
 public class AvatarPickerHelper {
     private final Context context;
     private final ImageView avatarView;
+    private final int userId; // 新增：保存用户ID
     private final ActivityResultLauncher<String> legacyPicker;
     private final ActivityResultLauncher<PickVisualMediaRequest> modernPicker;
 
-    public AvatarPickerHelper(ActivityResultCaller caller, Context context, ImageView avatarView) {
+    public AvatarPickerHelper(ActivityResultCaller caller, Context context, ImageView avatarView, int userId) {
         this.context = context;
         this.avatarView = avatarView;
+        this.userId = userId; // 初始化用户ID
 
         // Android 13+：使用系统相册选择器
         modernPicker = caller.registerForActivityResult(
@@ -60,6 +64,7 @@ public class AvatarPickerHelper {
                 legacyPicker.launch("image/*");
             } else {
                 Toast.makeText(context, "请开启读取权限", Toast.LENGTH_SHORT).show();
+                // 💡 注意：此处您可能还需要添加请求权限的逻辑，例如使用 requestPermissions()
             }
         }
     }
@@ -70,8 +75,9 @@ public class AvatarPickerHelper {
             InputStream in = resolver.openInputStream(uri);
             if (in == null) return;
 
-            // 保存到 app 内部存储
-            File avatarFile = new File(context.getFilesDir(), "avatar.jpg");
+            // ✅ 生成用户独有的头像文件名
+            String fileName = "avatar_" + userId + ".jpg"; // 例如：avatar_123.jpg
+            File avatarFile = new File(context.getFilesDir(), fileName);
             FileOutputStream out = new FileOutputStream(avatarFile);
             byte[] buffer = new byte[1024];
             int len;
@@ -83,6 +89,15 @@ public class AvatarPickerHelper {
 
             // 显示头像
             avatarView.setImageBitmap(BitmapFactory.decodeFile(avatarFile.getAbsolutePath()));
+
+            // ✅ 更新数据库中的头像路径
+            boolean success = DBManager.updateUserAvatarPath(userId, avatarFile.getAbsolutePath());
+            if (success) {
+                Toast.makeText(context, "头像设置成功", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(context, "头像设置成功但数据库更新失败", Toast.LENGTH_SHORT).show();
+            }
+
         } catch (Exception e) {
             Log.e("AvatarPicker", "Error saving image: " + e.getMessage());
             Toast.makeText(context, "头像设置失败", Toast.LENGTH_SHORT).show();

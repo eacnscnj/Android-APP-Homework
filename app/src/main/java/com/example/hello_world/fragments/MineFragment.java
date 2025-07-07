@@ -31,6 +31,9 @@ public class MineFragment extends Fragment {
 
     public MineFragment() {}
 
+    private int currentUserId;
+
+
     public static MineFragment newInstance(int currentUserId) {
         MineFragment fragment = new MineFragment();
         Bundle args = new Bundle();
@@ -41,6 +44,7 @@ public class MineFragment extends Fragment {
 
     private TextView tvUsername;
 
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -48,6 +52,9 @@ public class MineFragment extends Fragment {
 
         tvUsername = view.findViewById(R.id.tv_username);
 
+        if (getArguments() != null) {
+            currentUserId = getArguments().getInt("CURRENT_USER_ID", -1); // 获取传递的用户ID
+        }
         // 设置昵称
         int userId = DBManager.getCurrentUserId();
         UserInfo user = DBManager.getUserInfoById(userId);
@@ -127,19 +134,25 @@ public class MineFragment extends Fragment {
             });
         }
 
-        //头像功能
+        // 头像功能
         ImageView ivAvatar = view.findViewById(R.id.iv_avatar);
 
-        avatarPickerHelper = new AvatarPickerHelper(this, requireContext(), ivAvatar);
+        // ✅ 传递 currentUserId 到 AvatarPickerHelper
+        avatarPickerHelper = new AvatarPickerHelper(this, requireContext(), ivAvatar, currentUserId);
 
-            ivAvatar.setOnClickListener(v -> {
+        ivAvatar.setOnClickListener(v -> {
             avatarPickerHelper.launch();
         });
 
-        // 加载已有头像（如果存在）
-        File avatarFile = new File(requireContext().getFilesDir(), "avatar.jpg");
-            if (avatarFile.exists()) {
+        // ✅ 加载该用户的已有头像
+        // 确保这里加载的是特定用户的头像文件
+        String avatarFileName = "avatar_" + currentUserId + ".jpg";
+        File avatarFile = new File(requireContext().getFilesDir(), avatarFileName);
+        if (avatarFile.exists()) {
             ivAvatar.setImageBitmap(BitmapFactory.decodeFile(avatarFile.getAbsolutePath()));
+        } else {
+            // 如果特定用户的头像文件不存在，可以考虑设置一个默认头像
+            ivAvatar.setImageResource(R.drawable.me); // 假设你有一个默认头像资源
         }
     }
 }
